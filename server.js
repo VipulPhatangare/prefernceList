@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const upload = multer();
 require('dotenv').config();
-
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 
 
 require('dotenv').config();
@@ -19,6 +20,25 @@ const pdfSchema = new mongoose.Schema({
 });
 
 const Pdf = mongoose.model('Pdf', pdfSchema);
+
+
+const paymentSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  phone: String,
+  razorpay_payment_id: String,
+  razorpay_order_id: String,
+  plan: String,
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Payment = mongoose.model("Payment", paymentSchema);
+
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 const connectDB = async () => {
   try {
@@ -57,42 +77,18 @@ const central_object = {
     percentile: 0
 }
 
-app.get('/',(req, res)=>{
-    res.render('payementPage');
+app.get("/", (req, res) => {
+  res.render("payementPage", { razorpayKeyId: process.env.RAZORPAY_KEY_ID });
 });
 
-app.get('/:code/:count', async (req, res) => {
-    const { code, count } = req.params;
-    // console.log(count);
-
-    if(code !== 'vipulPha'){
-            const { data, error } = await supabase
-            .from('collegeCodeCD')
-            .select('code')
-            .eq('code', code)
-            .single();
-
-        if (error && error.code !== 'PGRST116') {
-            console.error('Database error:', error.message);
-            return res.status(500).send('Internal Server Error');
-        }
-
-        if (data) {
-            // Code exists in DB
-            req.session.code = code;
-            req.session.count = count;
-            req.session.email = 'vipulphatangare3@gmail.com';
-            res.render('home');
-        } else {
-            // Code does not exist
-            res.status(404).send('Page Not Found.');
-        }
-    }else{
-        req.session.code = code;
-        req.session.count = count;
-        req.session.email = 'vipulphatangare3@gmail.com';
+app.get('/collegeList', async (req, res) => {
+    // console.log(req.session.email);
+    if(req.session.email){
         res.render('home');
+    }else{
+        res.redirect('/');
     }
+    // res.render('home');
 });
 
 
@@ -1262,21 +1258,7 @@ app.post('/College_list', async (req, res) => {
             return res.send('Do not change the college count using url. Hahahaa.');
         }
 
-        let codeToDelete = req.session.code;
-        // 'vipulPha'
-
-        if(codeToDelete !== 'vipulPha'){
-            const { error } = await supabase
-                .from('collegeCodeCD')
-                .delete()
-                .eq('code', codeToDelete);
-
-            if (error) {
-                return console.error('Error deleting code:', error.message);
-            } else {
-                console.log(`Code '${codeToDelete}' deleted successfully.`);
-            }
-        }
+        
 
         colleges = colleges.slice(0,college_counts);
         // console.log(colleges);
@@ -1308,7 +1290,7 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
         });
 
         await newPreferenceList.save();
-        
+        delete req.session.email;
         res.json({ 
             success: true,
             message: 'PDF stored successfully'
@@ -1320,6 +1302,81 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
             message: 'Failed to store PDF: ' + error.message
         });
     }
+});
+
+
+app.post("/api/payment/create-order", async (req, res) => {
+  const { amount, name, email, phone, plan } = req.body;
+  // Optionally log or use user info for future use
+//   console.log("Order creation request:", { name, email, phone, plan, amount });
+  const options = {
+    amount: amount * 100, // amount in paise
+    currency: "INR",
+    receipt: "order_rcptid_" + Math.random().toString(36).substring(2, 15),
+  };
+  try {
+    const order = await razorpay.orders.create(options);
+    res.json(order);
+  } catch (err) {
+    res.status(500).send("Error creating order");
+  }
+});
+
+app.post("/api/payment/verify", (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    req.body;
+  const key_secret = process.env.RAZORPAY_KEY_SECRET;
+
+  // Generate expected signature
+  const hmac = crypto.createHmac("sha256", key_secret);
+  hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+  const generated_signature = hmac.digest("hex");
+
+  if (generated_signature === razorpay_signature) {
+    // Payment is verified
+    res.json({ success: true });
+  } else {
+    // Verification failed
+    res.json({ success: false });
+  }
+});
+
+app.post("/api/payment/store", async (req, res) => {
+  const { name, email, phone, razorpay_payment_id, razorpay_order_id, plan } =
+    req.body;
+  let count = 0;
+  if (plan === "Basic") count = 75;
+  else if (plan === "Plus") count = 150;
+  else if (plan === "Premium") count = 300;
+
+  try {
+    const payment = new Payment({
+      name,
+      email,
+      phone,
+      razorpay_payment_id,
+      razorpay_order_id,
+      plan,
+    });
+    await payment.save();
+    // Store count and email in session
+    req.session.count = count;
+    req.session.email = email;
+    res.json({
+      success: true,
+      count,
+      name,
+      email,
+      phone,
+      razorpay_payment_id,
+      razorpay_order_id,
+      plan,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to store payment info" });
+  }
 });
 
 app.listen(port || 3000, () => {

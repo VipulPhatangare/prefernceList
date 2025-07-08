@@ -27,7 +27,7 @@ const selectedBranchesContainer = document.getElementById('selectedBranchesConta
 const branchSelectionGroup = document.getElementById('branchSelectionGroup');
 const otherBranchCheckbox = document.getElementById('otherBranchCheckbox');
 const loadingContainer = document.getElementById('loadingContainer');
-const submitBtn = document.querySelector('.submit-btn'); // Get the submit button
+const submitBtn = document.getElementById('submitBtn');
 
 // Initialize
 updateSelectedCount(0);
@@ -221,10 +221,12 @@ function handleFormSubmit(e) {
                 // Hide the submit button after successful generation
                 if (!hasGeneratedList) {
                     submitBtn.style.display = 'none';
+                    
                     hasGeneratedList = true;
                 }
             });
     }, 100);
+    document.getElementById('backToHome').style.display = 'block';
 }
 
 function handleRegionCheckboxChange(e) {
@@ -663,4 +665,8 @@ async function generatePdf() {
         console.log(error);
     }
 }
+
+document.getElementById('backToHome').addEventListener('click', () => {
+    window.location.replace('https://campusdekho.ai');
+});
 

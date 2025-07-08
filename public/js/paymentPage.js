@@ -49,3 +49,4 @@ document.getElementById('planForm').addEventListener('submit', function(e) {
     // Reset form
     this.reset();
 });
+

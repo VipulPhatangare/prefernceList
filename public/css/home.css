@@ -15,6 +15,10 @@
     box-sizing: border-box;
 }
 
+#backToHome{
+    display: none;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #f5f7ff;

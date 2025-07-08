@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #4a6bff;
+    --primary-color: #0054A6;
     --secondary-color: #6c757d;
     --success-color: #28a745;
     --danger-color: #dc3545;
@@ -7,6 +7,40 @@
     --dark-color: #343a40;
     --border-radius: 8px;
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+#navBar{
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    border-bottom: 1px solid black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5000;
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#btnContainer{
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    margin-right: 50px;
+}
+
+.navbarBtn{
+    margin: 15px;
+    color: #0054A6;
+    cursor: pointer;
+}
+
+#navBar img{
+    /* margin-top: 15px; */
+    height: 70px;
 }
 
 * {
