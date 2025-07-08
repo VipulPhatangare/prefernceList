@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Preference List Plans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/paymentPage.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Best Plans For Your College Preference List</h1>
+            <p>Choose the plan that's right for your college admission process and get your personalized preference list.</p>
+        </header>
+
+        <div class="plans-container">
+            <div class="plan-card basic">
+                <div class="plan-header">
+                    <h3 class="plan-name">Basic</h3>
+                    <div class="plan-price">₹299 <span>/ one-time</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Personalized preference list</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Up to 75 college choices</span>
+                    </div>
+                </div>
+                <button class="select-btn" onclick="openModal('Basic')">Select Plan</button>
+            </div>
+
+            <div class="plan-card premium">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-header">
+                    <h3 class="plan-name">Plus</h3>
+                    <div class="plan-price">₹499 <span>/ one-time</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Personalized preference list</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Up to 150 college choices</span>
+                    </div>
+                    
+                </div>
+                <button class="select-btn" onclick="openModal('Plus')">Select Plan</button>
+            </div>
+
+            <div class="plan-card all-features">
+                <div class="plan-header">
+                    <h3 class="plan-name">Premium</h3>
+                    <div class="plan-price">₹999 <span>/ one-time</span></div>
+                </div>
+                <div class="plan-features">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Personalized preference list</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Up to 300 college choices</span>
+                    </div>
+                    
+                </div>
+                <button class="select-btn" onclick="openModal('Premium')">Select Plan</button>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <strong>Disclaimer: </strong> The information, predictions, and content provided by CampusDekho.ai, including preference List generator, college predictor and branch-wise prediction tools,
+            are intended solely for reference purposes. While we strive to ensure the accuracy and reliability of the data presented, we do not guarantee or
+            assure that the results and outcomes shown are 100% accurate or conclusive. Candidates are strongly advised to independently verify and
+            validate all information before making any decisions based on the provided.
+        </div>
+    </div>
+
+    <!-- Modal for plan selection -->
+    <div id="planModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalPlanName">Plan Name</h2>
+                <p id="modalPlanPrice">Plan Price</p>
+            </div>
+            <form id="planForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <button type="submit" class="submit-btn">Proceed to Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/paymentPage.js"></script>
+</body>
+</html>

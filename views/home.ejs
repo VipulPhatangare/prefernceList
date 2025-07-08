@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusDekho</title>
+    <link rel="icon" href="/asset/cd.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+    
+    <div class="container">
+
+        <header>
+            <h1>Preference list Generator</h1>
+        </header>
+        <div class="note-box">
+            <strong>Note:</strong> Please fill in the information carefully. This list is generated based on last year's cutoff data. Sometimes, the number of colleges may be fewer than you expect due to limited available choices, so please select your options carefully.
+        </div>
+        <main>
+            <form id="collegeForm">
+                <div class="form-group">
+                    <label for="generalRank">Your Percentile</label>
+                    <input type="number" id="generalRank" min="1" step="0.1" max="100" placeholder="Enter your MHT CET percentile" required>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="generalRank">Your All India Rank</label>
+                    <input type="number" id="allIndiaRank" min="1" step="1" placeholder="Enter your all India rank" required>
+                </div> -->
+
+                <div class="form-group">
+                    <label for="caste">Caste Category</label>
+                    <select id="caste" required>
+                        <option value="OPEN" selected>Open</option>
+                        <option value="SEBC">SEBC</option>
+                        <option value="OBC">OBC</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>   
+                        <option value="VJ">VJ</option>
+                        <option value="NT1">NT1</option>
+                        <option value="NT2">NT2</option>
+                        <option value="NT3">NT3</option>
+                        <option value="EWS">EWS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="gender" value="Male" checked>
+                            <span>Male</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="Female">
+                            <span>Female</span>
+                        </label>
+                    </div>
+                </div>
+
+                
+
+                <div class="form-group">
+                    <label for="homeUniversity">Home University</label>
+                    <select id="homeUniversity" required>
+                        
+                    </select>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="specialReservation">Special Reservation</label>
+                    <select id="specialReservation">
+                        <option value="No" selected>No</option>
+                        <option value="PWD">PWD</option>
+                        <option value="DEF">Defence</option>
+                        <option value="ORPHAN">Orphan</option>
+                    </select>
+                </div> -->
+
+                <div class="form-group" id="tfwsContainer">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="tfws">
+                        <span>TFWS (Tuition Fee Waiver Scheme)</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>Branch Category</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="All" checked class="branch-checkbox" data-all="true">
+                            All
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="CIVIL" class="branch-checkbox">
+                            Civil
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="COMP" class="branch-checkbox">
+                            Computer Science
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="IT" class="branch-checkbox">
+                            Information Technology
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="COMPAI" class="branch-checkbox">
+                            CSE (Artificial Intelligence)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="AI" class="branch-checkbox">
+                            Artificial Intelligence
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="ELECTRICAL" class="branch-checkbox">
+                            Electrical
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="ENTC" class="branch-checkbox">
+                            ENTC
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="MECH" class="branch-checkbox">
+                            Mechanical
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="branchCategory" value="OTHER" class="branch-checkbox" id="otherBranchCheckbox">
+                            Other
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group hidden" id="branchSelectionGroup">
+                    <label>Other Branch Selection</label>
+                    <button type="button" id="customBranchBtn" class="custom-branch-btn">+ Add Custom Branches</button>
+                    <div id="selectedBranchesContainer" class="selected-branches-container"></div>
+                    <select id="branch" class="hidden"></select>
+                </div>
+                
+
+
+                <div class="form-group">
+                    <label>City</label>
+                    <div class="checkbox-group" id="regionCheckboxGroup">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="region" value="All" checked>
+                            <span>All Regions</span>
+                        </label>
+                        
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="region" value="Buldhana">
+                            <span>Buldhana</span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- <div class="form-group">
+                    <label for="collegeCount">Number Choice : </label>
+                    <select id="collegeCount" required>
+                        <option value="50" selected>50</option>
+                        <option value="100" >100</option>
+                        <option value="150">150</option>
+                    </select>
+                </div> -->
+
+                <button type="submit" class="submit-btn">Generate College List</button>
+            </form>
+
+            <div class="results-container" id="resultsContainer">
+                <div class="results-header">
+                    <div class="results-title">Recommended Colleges</div>
+                    <div id="selectedCount">0 selected</div>
+                </div>
+                <div class="college-cards" id="collegeCards"></div>
+                <button class="finalize-btn" id="downloadPdfBtn">Download PDF</button>
+            </div>
+
+            <div id="pdfContainer" class="hidden">
+                <div class="pdf-header">
+                    <h2>Selected Colleges List</h2>
+                    
+                </div>
+                <div class="pdf-content">
+                    <table id="pdfTable">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Choice code</th>
+                                <th>College Name</th>
+                                <th>Branch</th>
+                                <th>University</th>
+                                <th>Seat Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pdfTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="loading-container" id="loadingContainer">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Generating your college list...</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="/js/home.js"></script>
+</body>
+</html>
+
+
+
