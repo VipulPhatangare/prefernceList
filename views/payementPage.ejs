@@ -62,15 +62,24 @@
         }
 
         .plan-card.basic {
-            border-top: 4px solid #6c757d;
+            border-top: 4px solid #ffc107;
         }
 
         .plan-card.premium {
-            border-top: 4px solid #4a6bff;
+            border-top: 4px solid #ffc107;
         }
 
+        .plan-card.basic:hover{
+            border-top: 4px solid #0054A6;
+        }
+        .plan-card.premium:hover{
+            border-top: 4px solid #0054A6;
+        }
+        .plan-card.all-features:hover{
+            border-top: 4px solid #0054A6;
+        }
         .plan-card.all-features {
-            border-top: 4px solid #28a745;
+            border-top: 4px solid #ffc107;
         }
 
         .plan-price {
@@ -212,7 +221,7 @@
     <!-- Main Content -->
     <div class="container py-5">
         <header class="text-center mb-5">
-            <h1 class="fw-bold mb-3">Best Plans For Your College Preference List</h1>
+            <h1 class="fw-bold mb-3">Best <span style="color:#0054A6">Plans</span> For Your College Preference List</h1>
             <p class="lead">Choose the plan that's right for your college admission process and get your personalized preference list.</p>
         </header>
 
@@ -221,8 +230,8 @@
             <div class="col-md-4">
                 <div class="plan-card basic p-4 h-100">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold">Preference List</h3>
-                        <p class="text-muted">Basic</p>
+                        <h5 class="fw-bold">Preference List</h5>
+                        <p class="text-muted" style="font-size: 20px;">Basic</p>
                         <div class="plan-price">₹299</div>
                     </div>
                     <ul class="list-unstyled mb-4">
@@ -243,8 +252,8 @@
             <div class="col-md-4">
                 <div class="plan-card premium p-4 h-100">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold">Preference List</h3>
-                        <p class="text-muted">Plus</p>
+                        <h5 class="fw-bold">Preference List</h5>
+                        <p class="text-muted" style="font-size: 20px;">Plus</p>
                         <div class="plan-price">₹499</div>
                     </div>
                     <ul class="list-unstyled mb-4">
@@ -265,8 +274,8 @@
             <div class="col-md-4">
                 <div class="plan-card all-features p-4 h-100">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold">Preference List</h3>
-                        <p class="text-muted">Premium</p>
+                        <h5 class="fw-bold">Preference List</h5>
+                        <p class="text-muted" style="font-size: 20px;">Premium</p>
                         <div class="plan-price">₹999</div>
                     </div>
                     <ul class="list-unstyled mb-4">
@@ -418,7 +427,7 @@
                             <label for="phone" class="form-label">Phone Number</label>
                             <input type="tel" class="form-control" id="phone" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" id="proceedToPaymentBtn">Proceed to Payment</button>
+                        <button type="submit" class="btn btn-primary w-100" id="proceedToPaymentBtn">Proceed to Generate list</button>
                     </form>
                 </div>
             </div>
