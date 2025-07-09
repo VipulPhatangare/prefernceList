@@ -1274,11 +1274,11 @@ app.post('/College_list', async (req, res) => {
         let college_counts;
         let count = req.session.userPaymentInfo.amount;
         if(count == 299){
-            college_counts = 75;
+            college_counts = 150;
         }else if(count == 499){
             college_counts = 150;
         }else if(count == 999){
-            college_counts = 300;
+            college_counts = 150;
         }else{
             return res.send('Do not change the college count using url. Hahahaa.');
         }
@@ -1399,9 +1399,9 @@ app.post("/api/payment/verify", (req, res) => {
 app.post("/api/payment/store", async (req, res) => {
   const { name, email, phone, razorpay_payment_id, razorpay_order_id, plan } = req.body;
   let count = 0;
-  if (plan === "Basic") count = 75;
+  if (plan === "Basic") count = 150;
   else if (plan === "Plus") count = 150;
-  else if (plan === "Premium") count = 300;
+  else if (plan === "Premium") count = 150;
 
   try {
     const payment = new Payment({
