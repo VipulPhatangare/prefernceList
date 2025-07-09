@@ -13,10 +13,10 @@ const crypto = require("crypto");
 require('dotenv').config();
 
 const pdfSchema = new mongoose.Schema({
-  email: String,
-  examType: String,
-  pdf: { type: Buffer, required: true }, 
-  createdAt: { type: Date, default: Date.now }
+    email: String,
+    examType: String,
+    pdf: { type: Buffer, required: true }, 
+    createdAt: { type: Date, default: Date.now }
 });
 
 const Pdf = mongoose.model('Pdf', pdfSchema);
@@ -1292,7 +1292,31 @@ app.post('/College_list', async (req, res) => {
         console.log(error);
         res.status(500).json({ error: 'Failed to fetch colleges' });
     }
+
 });
+
+
+app.get('/download/pdf/:id', async (req, res) => {
+    try {
+        const pdfDoc = await Pdf.findById(req.params.id);
+
+        if (!pdfDoc || !pdfDoc.pdf) {
+            return res.status(404).send('PDF not found');
+        }
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename="${pdfDoc.examType || 'download'}.pdf"`
+        });
+
+        res.send(pdfDoc.pdf); // Send buffer
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 app.post('/savePdf', upload.single('pdf'), async (req, res) => {
     try {
@@ -1315,13 +1339,16 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
         });
 
         await newPreferenceList.save();
-        console.log('prefrence list save..');
+        // console.log('prefrence list save..');
         delete req.session.userPaymentInfo;
         // console.log('prefrence list save..');
+        req.session.pdfID = newPreferenceList._id.toString();
+        // console.log(req.session.pdfID);
         res.json({ 
             success: true,
             message: 'PDF stored successfully'
         });
+
     } catch (error) {
         console.error('Error storing PDF:', error);
         res.status(500).json({
