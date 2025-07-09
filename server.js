@@ -8,6 +8,9 @@ const upload = multer();
 require('dotenv').config();
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const ExcelJS = require('exceljs');
+const fs = require('fs');
+
 
 
 require('dotenv').config();
@@ -80,6 +83,79 @@ const central_object = {
 app.get("/", (req, res) => {
   res.render("payementPage");
 });
+
+
+
+app.get('/download-payments-excel', async (req, res) => {
+  try {
+    // 1. Create a new Excel workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Payments');
+    
+    // 2. Define columns with headers
+    worksheet.columns = [
+      { header: 'Name', key: 'name', width: 20 },
+      { header: 'Email', key: 'email', width: 30 },
+      { header: 'Phone', key: 'phone', width: 15 },
+      { header: 'Payment ID', key: 'razorpay_payment_id', width: 30 },
+      { header: 'Order ID', key: 'razorpay_order_id', width: 30 },
+      { header: 'Plan', key: 'plan', width: 15 },
+      { header: 'Created At', key: 'createdAt', width: 20 }
+    ];
+    
+    // 3. Fetch all payments from MongoDB
+    const payments = await Payment.find({}).lean();
+    
+    // 4. Add data to worksheet
+    payments.forEach(payment => {
+      worksheet.addRow({
+        name: payment.name,
+        email: payment.email,
+        phone: payment.phone,
+        razorpay_payment_id: payment.razorpay_payment_id,
+        razorpay_order_id: payment.razorpay_order_id,
+        plan: payment.plan,
+        createdAt: payment.createdAt.toISOString() // Format date as string
+      });
+    });
+    
+    // 5. Style the header row
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFD3D3D3' } // Light gray background
+      };
+    });
+    
+    // 6. Set response headers for file download
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename=payments-export.xlsx'
+    );
+    
+    // 7. Send the Excel file as response
+    await workbook.xlsx.write(res);
+    
+    // End the response
+    res.end();
+    
+  } catch (error) {
+    console.error('Error generating Excel file:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to generate Excel export',
+      error: error.message
+    });
+  }
+});
+
+
 
 app.get('/collegeList', async (req, res) => {
 
