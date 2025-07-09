@@ -508,7 +508,7 @@ function displayColleges(colleges, formData) {
     
     resultsContainer.style.display = 'block';
     updateSelectedCount(colleges.length);
-    generatePdf();
+    saveGeneratePdf();
     setTimeout(() => {
         resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
@@ -600,7 +600,7 @@ function updateSelectedCount(count) {
     }
 }
 
-async function generatePdf() {
+async function saveGeneratePdf() {
     try {
         if (!central_object.final_college_list || central_object.final_college_list.length === 0) {
             alert('Please generate a college list first');
@@ -821,6 +821,188 @@ async function generatePdf() {
     }
 }
 
+async function generatePdf() {
+    try {
+        if (!central_object.final_college_list || central_object.final_college_list.length === 0) {
+            alert('Please generate a college list first');
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+        // Add watermark to first page
+        // addWatermark(doc);
+
+        // Add title
+        doc.setFontSize(30);
+        doc.text('CampusDekho.ai', 14, 20);
+        doc.setFontSize(12);
+        
+        // Student information
+        doc.text(`Percentile: ${central_object.formData.generalRank}`, 14, 30);
+        doc.text(`Gender: ${central_object.formData.gender}`, 14, 36);
+        doc.text(`Home University: ${central_object.formData.homeuniversity}`, 14, 42);
+        doc.text(`Caste: ${central_object.formData.caste}`, 14, 48);
+
+        // Format branch category
+        const branch_cat_obj = {
+            All: 'All',
+            CIVIL: 'Civil',
+            COMP: 'Computer Science',
+            IT: 'Information Technology',
+            COMPAI: 'CSE (Artificial Intelligence)',
+            AI: 'Artificial Intelligence',
+            ELECTRICAL: 'Electrical',
+            ENTC: 'ENTC',
+            MECH: 'Mechanical',
+            OTHER: 'Other'
+        };
+
+        const branch_categories = central_object.formData.branchCategories
+            .map(el => branch_cat_obj[el] || el)
+            .join(", ");
+
+        // Add branch categories with text wrapping
+        const wrappedBranchText = doc.splitTextToSize(`Branch Categories: ${branch_categories}`, 270);
+        let currentY = 54;
+        doc.text(wrappedBranchText, 14, currentY);
+        currentY += wrappedBranchText.length * 6;
+
+        // Add selected branches if any
+        if (selectedBranches.length > 0) {
+            const selectedBranchesText = doc.splitTextToSize(`Selected Branches: ${selectedBranches.join(", ")}`, 270);
+            doc.text(selectedBranchesText, 14, currentY);
+            currentY += selectedBranchesText.length * 6;
+        }
+
+        // Format city list
+        const cityString = central_object.formData.city.includes("All") ? "All Regions" : central_object.formData.city.join(", ");
+        const wrappedCityText = doc.splitTextToSize(`Cities: ${cityString}`, 270);
+        doc.text(wrappedCityText, 14, currentY);
+        currentY += wrappedCityText.length * 6;
+
+        // TFWS status
+        const tfwsText = central_object.formData.tfws ? 'TFWS: Yes' : 'TFWS: No';
+        doc.text(tfwsText, 14, currentY);
+        currentY += 10;
+
+        // Prepare table data
+        let headData = ['No.', 'Choice Code', 'College Name', 'Branch', 'GOPEN'];
+
+        if(central_object.formData.caste == 'EWS'){
+            headData.push('EWS');
+        }
+
+        if(central_object.formData.caste != 'OPEN' && central_object.formData.caste != 'EWS' && central_object.formData.gender == 'Male'){
+            headData.push(`G${central_object.formData.caste}`)
+        }
+
+        if(central_object.formData.gender == 'Female'){
+            headData.push('LOPEN');
+
+            if(central_object.formData.caste != 'OPEN' && central_object.formData.caste != 'EWS'){
+                headData.push(`L${central_object.formData.caste}`)
+            }
+        }
+        
+        if(central_object.formData.tfws){
+            headData.push('TFWS');
+        }
+
+        let count = 1;
+        const tableData = [];
+        
+        central_object.final_college_list.forEach(college => {
+            // Regular seat
+            let row = [
+                count++,
+                college.choice_code,
+                college.college_name,
+                college.branch_name,
+                college.gopen
+            ];
+            
+            if(central_object.formData.caste == 'EWS'){
+                row.push(college.ews);
+            }
+            
+            if(central_object.formData.caste != 'OPEN' && central_object.formData.caste != 'EWS' && central_object.formData.gender == 'Male'){
+                let c = `G${central_object.formData.caste}`;
+                row.push(college[c.toLowerCase()]);
+            }
+
+            if(central_object.formData.gender == 'Female'){
+                row.push(college.lopen);
+                if(central_object.formData.caste != 'EWS' && central_object.formData.caste != 'OPEN'){
+                    let c = `L${central_object.formData.caste}`;
+                    row.push(college[c.toLowerCase()]);
+                }
+            }
+            
+            if(central_object.formData.tfws){
+                row.push(college.tfws);
+            }
+            
+            tableData.push(row);
+        });
+
+        // Add table
+        doc.autoTable({
+            head: [headData],
+            body: tableData,
+            startY: currentY,
+            theme: 'grid',
+            headStyles: {
+                fillColor: [26, 58, 143],
+                textColor: 255,
+                fontSize: 8
+            },
+            bodyStyles: {
+                fontSize: 7
+            },
+            alternateRowStyles: {
+                fillColor: [240, 240, 240]
+            },
+            margin: { left: 14 },
+            didDrawPage: function (data) {
+                // Add watermark to each subsequent page
+                // addWatermark(doc);
+                
+                // Disclaimer text
+                const pageHeight = doc.internal.pageSize.height;
+                doc.setFontSize(8);
+                doc.setTextColor(100);
+                doc.text(
+                    'Disclaimer: The information, predictions, and content provided by CampusDekho.ai , including college predictor and branch-wise prediction tools, are intended solely for reference purposes. While we strive to ensure',
+                    14,
+                    pageHeight - 11
+                );
+                doc.text(
+                    'the accuracy and reliability of the data presented, we do not guarantee or assure that the results and outcomes shown are 100% accurate or conclusive. Candidates are strongly advised to independently verify and',
+                    14,
+                    pageHeight - 7
+                );
+                doc.text(
+                    'validate all information before making any decisions based on the provided.',
+                    14,
+                    pageHeight - 3
+                );
+            }
+        });
+
+        doc.save('Engineering_Preference_List.pdf');
+
+        
+    } catch (error) {
+        console.log(error);
+        alert('An error occurred while generating the PDF');
+    }
+}
 document.getElementById('backToHome').addEventListener('click', () => {
     window.location.replace('https://campusdekho.ai');
 });
