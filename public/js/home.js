@@ -1090,7 +1090,7 @@ async function handleFormSubmit(e) {
 
     try {
         // Show payment confirmation modal
-        showPaymentModal(99, async (confirmed) => {
+        showPaymentModal(PaymentPrice, async (confirmed) => {
             if (confirmed) {
                 const paymentSuccess = await processPayment();
                 
@@ -1127,78 +1127,6 @@ async function handleFormSubmit(e) {
 
 
 
-// async function processPayment() {
-//     try {
-//         // const userPaymentInfo = {
-//         //     name: "College List Generation",
-//         //     email: "user@example.com", // You should get this from the user
-//         //     phone: "1234567890",      // You should get this from the user
-//         //     plan: "College List"
-//         // };
-        
-//         // sessionStorage.setItem('userPaymentInfo', JSON.stringify(userPaymentInfo));
-//         // console.log("payment function called.")
-//         const userPaymentInfoResponse = await fetch('/takePaymentInfo');
-//         const userPaymentInfo = await userPaymentInfoResponse.json();
-//         // console.log(userPaymentInfo);
-//         const response = await fetch('/api/payment/create-order');
-//         if (!response.ok) throw new Error('Failed to create payment order');
-        
-//         const order = await response.json();
-        
-//         return new Promise((resolve) => {
-//             const options = {
-//                 key: razorpayKeyId,
-//                 amount: order.amount,
-//                 currency: order.currency,
-//                 name: "CampusDekho",
-//                 description: userPaymentInfo.plan + " Plan",
-//                 order_id: order.id,
-//                 handler: async function(response) {
-//                     const paymentData = {
-//                         name: userPaymentInfo.name,
-//                         email: userPaymentInfo.email,
-//                         phone: userPaymentInfo.phone,
-//                         plan: userPaymentInfo.plan,
-//                         razorpay_payment_id: response.razorpay_payment_id,
-//                         razorpay_order_id: response.razorpay_order_id
-//                     };
-                    
-//                     const storeRes = await fetch('/api/payment/store', {
-//                         method: 'POST',
-//                         headers: { 'Content-Type': 'application/json' },
-//                         body: JSON.stringify(paymentData)
-//                     });
-                    
-//                     const storeData = await storeRes.json();
-//                     if (storeData.success) {
-//                         resolve(true);
-//                     } else {
-//                         resolve(false);
-//                     }
-//                 },
-//                 prefill: {
-//                     name: userPaymentInfo.name,
-//                     email: userPaymentInfo.email,
-//                     contact: userPaymentInfo.phone
-//                 },
-//                 theme: {
-//                     color: "#0054A6"
-//                 }
-//             };
-            
-//             const rzp = new Razorpay(options);
-//             rzp.on('payment.failed', function(response) {
-//                 console.error('Payment failed:', response);
-//                 resolve(false);
-//             });
-//             rzp.open();
-//         });
-//     } catch (error) {
-//         console.error('Payment error:', error);
-//         return false;
-//     }
-// }
 
 async function processPayment() {
     try {
