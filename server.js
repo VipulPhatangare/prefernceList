@@ -1343,7 +1343,7 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
         delete req.session.userPaymentInfo;
         // console.log('prefrence list save..');
         req.session.pdfID = newPreferenceList._id.toString();
-        // console.log(req.session.pdfID);
+        console.log(req.session.pdfID);
         res.json({ 
             success: true,
             message: 'PDF stored successfully'
