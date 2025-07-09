@@ -1274,9 +1274,9 @@ app.post('/College_list', async (req, res) => {
         let college_counts;
         let count = req.session.userPaymentInfo.amount;
         if(count == 299){
-            college_counts = 150;
-        }else if(count == 499){
             college_counts = 75;
+        }else if(count == 499){
+            college_counts = 150;
         }else if(count == 999){
             college_counts = 300;
         }else{
