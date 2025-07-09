@@ -148,12 +148,12 @@
                     <div class="checkbox-group" id="regionCheckboxGroup">
                         <label class="checkbox-label">
                             <input type="checkbox" name="region" value="All" checked>
-                            <span>All Regions</span>
+                            <span>All city</span>
                         </label>
                         
                         <label class="checkbox-label">
-                            <input type="checkbox" name="region" value="Buldhana">
-                            <span>Buldhana</span>
+                            <!-- <input type="checkbox" name="region" value="Buldhana"> -->
+                            <!-- <span>Buldhana</span> -->
                         </label>
                     </div>
                 </div>
@@ -211,9 +211,19 @@
         </main>
     </div>
 
+    <div id="notificationPopup" class="notification-popup">
+        <span class="notification-icon">✓</span>
+        <span id="notificationMessage">Message goes here</span>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="/js/home.js"></script>
+    <script>
+        const razorpayKeyId = "<%= razorpayKeyId %>";
+        const PaymentPrice = "<%= price %>";
+    </script>
 </body>
 </html>
 

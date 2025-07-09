@@ -78,18 +78,43 @@ const central_object = {
 }
 
 app.get("/", (req, res) => {
-  res.render("payementPage", { razorpayKeyId: process.env.RAZORPAY_KEY_ID });
+  res.render("payementPage");
 });
 
 app.get('/collegeList', async (req, res) => {
-    // console.log(req.session.email);
-    if(req.session.email){
-        res.render('home');
+
+    // console.log(req.session.userPaymentInfo);
+    if(req.session.userPaymentInfo){
+        res.render('home', { razorpayKeyId: process.env.RAZORPAY_KEY_ID , price: req.session.userPaymentInfo.amount});
     }else{
         res.redirect('/');
     }
     // res.render('home');
 });
+
+app.get('/takePaymentInfo',(req, res)=>{
+    const userPaymentInfo = req.session.userPaymentInfo;
+    res.json(userPaymentInfo);
+});
+
+app.post('/saveStudentIfo', async (req, res) => {
+    try {
+        const userPaymentInfo = req.body;
+        console.log("saving student payment data: ", userPaymentInfo);
+        req.session.userPaymentInfo = userPaymentInfo;
+
+        return res.json({
+            isOk: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            isOk: false,
+            error: 'Internal server error'
+        });
+    }
+});
+
 
 
 app.get('/fetchBranches', async (req, res) => {
@@ -1247,12 +1272,12 @@ app.post('/College_list', async (req, res) => {
 
         let colleges = await getColleges(formData);
         let college_counts;
-        let count = req.session.count;
-        if(count == 150 || count == '150'){
+        let count = req.session.userPaymentInfo.amount;
+        if(count == 299){
             college_counts = 150;
-        }else if(count == 75 || count == '75'){
+        }else if(count == 499){
             college_counts = 75;
-        }else if(count == 300 || count == '300'){
+        }else if(count == 999){
             college_counts = 300;
         }else{
             return res.send('Do not change the college count using url. Hahahaa.');
@@ -1281,7 +1306,7 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
 
         const exam = req.body.exam; // No need to parse, it's already an object
         const pdfBuffer = req.file.buffer; 
-        const email = req.session.email;
+        const email = req.session.userPaymentInfo.email;
         
         const newPreferenceList = new Pdf({
             email: email,
@@ -1290,7 +1315,9 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
         });
 
         await newPreferenceList.save();
-        delete req.session.email;
+        console.log('prefrence list save..');
+        delete req.session.userPaymentInfo;
+        // console.log('prefrence list save..');
         res.json({ 
             success: true,
             message: 'PDF stored successfully'
@@ -1305,21 +1332,22 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
 });
 
 
-app.post("/api/payment/create-order", async (req, res) => {
-  const { amount, name, email, phone, plan } = req.body;
-  // Optionally log or use user info for future use
-//   console.log("Order creation request:", { name, email, phone, plan, amount });
-  const options = {
-    amount: amount * 100, // amount in paise
-    currency: "INR",
-    receipt: "order_rcptid_" + Math.random().toString(36).substring(2, 15),
-  };
-  try {
-    const order = await razorpay.orders.create(options);
-    res.json(order);
-  } catch (err) {
-    res.status(500).send("Error creating order");
-  }
+app.get("/api/payment/create-order", async (req, res) => {
+    
+    console.log(req.session.userPaymentInfo);
+    const amount = req.session.userPaymentInfo.amount;
+    
+    const options = {
+        amount: amount * 100, // amount in paise
+        currency: "INR",
+        receipt: "order_rcptid_" + Math.random().toString(36).substring(2, 15),
+    };
+    try {
+        const order = await razorpay.orders.create(options);
+        res.json(order);
+    } catch (err) {
+        res.status(500).send("Error creating order");
+    }
 });
 
 app.post("/api/payment/verify", (req, res) => {
@@ -1342,8 +1370,7 @@ app.post("/api/payment/verify", (req, res) => {
 });
 
 app.post("/api/payment/store", async (req, res) => {
-  const { name, email, phone, razorpay_payment_id, razorpay_order_id, plan } =
-    req.body;
+  const { name, email, phone, razorpay_payment_id, razorpay_order_id, plan } = req.body;
   let count = 0;
   if (plan === "Basic") count = 75;
   else if (plan === "Plus") count = 150;

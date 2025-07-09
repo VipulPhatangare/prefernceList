@@ -533,5 +533,113 @@ html {
 }
 
 
+/* Popup Notification Styles */
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: var(--border-radius);
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1100;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification-popup.show {
+    transform: translateX(0);
+}
+
+.notification-popup.success {
+    background-color: var(--success-color);
+}
+
+.notification-popup.error {
+    background-color: var(--danger-color);
+}
+
+.notification-popup.info {
+    background-color: var(--primary-color);
+}
+
+.notification-icon {
+    font-size: 1.2rem;
+}
+
+/* Payment Modal Styles */
+.payment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.payment-modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+.payment-modal-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.payment-modal-content p {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+}
+
+.payment-modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.payment-confirm-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.payment-confirm-btn:hover {
+    background-color: #218838;
+}
+
+.payment-cancel-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.payment-cancel-btn:hover {
+    background-color: #c82333;
+}
+
 
 
