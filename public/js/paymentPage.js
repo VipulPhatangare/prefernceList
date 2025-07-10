@@ -4,7 +4,7 @@ function openModal(planName) {
     const modalPlanName = document.getElementById('modalPlanName');
     const modalPlanPrice = document.getElementById('modalPlanPrice');
     
-    modalPlanName.textContent = planName + ' Plan';
+    modalPlanName.textContent = planName ;
     
     // Set price based on plan
     if (planName === 'Basic') {

@@ -232,29 +232,7 @@
                 <div class="plan-card basic p-4 h-100">
                     <div class="text-center mb-4">
                         <h5 class="fw-bold" style="font-size: 22px;">Preference List</h5>
-                        <p class="text-muted" style="font-size: 18px;">Basic</p>
-                        <div class="plan-price">₹299</div>
-                    </div>
-                    <ul class="list-unstyled mb-4">
-                        <li class="mb-2 feature-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Personalized preference list</span>
-                        </li>
-                        <li class="mb-2 feature-item">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Up to 150 college choices</span>
-                        </li>
-                    </ul>
-                    <button class="btn btn-primary w-100" onclick="openModal('Basic')">Select Plan</button>
-                </div>
-            </div>
-
-            <!-- Plus Plan -->
-            <!-- <div class="col-md-4">
-                <div class="plan-card premium p-4 h-100">
-                    <div class="text-center mb-4">
-                        <h5 class="fw-bold" style="font-size: 22px;">Preference List</h5>
-                        <p class="text-muted" style="font-size: 18px;">Plus</p>
+                        <p class="text-muted" style="font-size: 18px;">Standard Package</p>
                         <div class="plan-price">₹499</div>
                     </div>
                     <ul class="list-unstyled mb-4">
@@ -266,10 +244,56 @@
                             <i class="fas fa-check-circle"></i>
                             <span>Up to 150 college choices</span>
                         </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Based on your CET/Percentile</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Sorted by cut-off, location, and ranking</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Top Choice Colleges</span>
+                        </li>
                     </ul>
-                    <button class="btn btn-primary w-100" onclick="openModal('Plus')">Select Plan</button>
+                    <button class="btn btn-primary w-100" onclick="openModal('Standard Package')">Select Plan</button>
                 </div>
-            </div> -->
+            </div>
+
+            <!-- Plus Plan -->
+            <div class="col-md-4">
+                <div class="plan-card premium p-4 h-100">
+                    <div class="text-center mb-4">
+                        <h5 class="fw-bold" style="font-size: 22px;">Preference List</h5>
+                        <p class="text-muted" style="font-size: 18px;">Premium Package</p>
+                        <div class="plan-price">₹999</div>
+                    </div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Personalized preference list</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Up to 300 college choices</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Based on your CET/Percentile</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Sorted by cut-off, location, and ranking</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Top Choice Colleges</span>
+                        </li>
+                    </ul>
+                    <button class="btn btn-primary w-100" onclick="openModal('Premium Package')">Select Plan</button>
+                </div>
+            </div>
 
             <!-- Premium Plan -->
             <!-- <div class="col-md-4">
@@ -447,12 +471,10 @@
             const modalPlanName = document.getElementById('modalPlanName');
             const modalPlanPrice = document.getElementById('modalPlanPrice');
             
-            modalPlanName.textContent = planName + ' Plan';
+            modalPlanName.textContent = planName ;
             
             // Set price based on plan
-            if (planName === 'Basic') {
-                modalPlanPrice.textContent = '₹299 (one-time payment)';
-            } else if (planName === 'Plus') {
+            if (planName === 'Standard Package') {
                 modalPlanPrice.textContent = '₹499 (one-time payment)';
             } else {
                 modalPlanPrice.textContent = '₹999 (one-time payment)';
@@ -471,9 +493,9 @@
             const phone = document.getElementById('phone').value;
             const plan = document.getElementById('modalPlanName').textContent.replace(' Plan', '');
             
-            let amount = 299;
-            if (plan === 'Plus') amount = 499;
-            if (plan === 'Premium') amount = 999;
+            let amount = 499;
+            // if (plan === 'Plus') amount = 499;
+            if (plan === 'Premium Package') amount = 999;
 
             userPaymentInfo = { name, email, phone, amount , plan};
 
