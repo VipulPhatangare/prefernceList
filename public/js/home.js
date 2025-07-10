@@ -143,12 +143,52 @@ function showNotification(message, type = 'info') {
 function showPaymentModal(amount, callback) {
     const modal = document.createElement('div');
     modal.className = 'payment-modal';
+    
+    // Calculate the breakdown (assuming amount is the total)
+    console.log(amount);
+    const basePrice = amount; // Assuming 20% total tax (9% CGST + 9% SGST + 2% convenience)
+    const cgst = (basePrice * 0.09).toFixed(2);
+    const sgst = (basePrice * 0.09).toFixed(2);
+    const convenienceFee = (basePrice * 0.03).toFixed(2);
+    let totalAmmount = (basePrice * 1.21).toFixed(2);
+    // totalAmmount += amount;
     modal.innerHTML = `
         <div class="payment-modal-content">
             <h3>Confirm Payment</h3>
-            <p>You need to pay ₹${amount} to generate your college list.</p>
+            <p>To proceed with generating your personalized college list, please complete the payment of ₹${amount} + applicable taxes and fees. A detailed cost breakdown is provided below.</p>
+            
+            <div class="payment-breakdown" >
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="text-align: left;">Base Price</td>
+                        <td style="text-align: right;">₹${basePrice}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">CGST (9%)</td>
+                        <td style="text-align: right;">₹${cgst}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">SGST (9%)</td>
+                        <td style="text-align: right;">₹${sgst}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Convenience Fee (3%)</td>
+                        <td style="text-align: right;">₹${convenienceFee}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td style="text-align: left;"><strong >Total Payable</strong></td>
+                        <td style="text-align: right;"><strong  >₹${totalAmmount}</strong></td>
+                    </tr>
+                    <tr class="gst-row">
+                        <td colspan="2" style="text-align: center; font-size: 1.1em; padding-top: 1em;">
+                            GSTIN: 27OJKPS9666F1Z2
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
             <div class="payment-modal-buttons">
-                <button id="confirmPaymentBtn" class="payment-confirm-btn">Pay Now</button>
+                <button id="confirmPaymentBtn" class="payment-confirm-btn" style="background-color: #0067A5;">Pay Now</button>
                 <button id="cancelPaymentBtn" class="payment-cancel-btn">Cancel</button>
             </div>
         </div>

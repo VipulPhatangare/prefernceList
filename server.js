@@ -1437,9 +1437,9 @@ app.get("/api/payment/create-order", async (req, res) => {
     
     console.log(req.session.userPaymentInfo);
     const amount = req.session.userPaymentInfo.amount;
-    
+    const finalAmount = (amount * 1.21).toFixed(2);
     const options = {
-        amount: amount * 100, // amount in paise
+        amount: finalAmount * 100, // amount in paise
         currency: "INR",
         receipt: "order_rcptid_" + Math.random().toString(36).substring(2, 15),
     };
