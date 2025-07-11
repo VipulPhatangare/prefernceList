@@ -1472,8 +1472,8 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
         // console.log(req.session.userPaymentInfo)
         
         const userPaymentInfo = req.session.userPaymentInfo;
-        const listLink = `http://localhost:3000/download/pdf/${pdfID}`;
-        // const listLink = `https://list.campusdekho.ai/download/pdf/${pdfID}`;
+        // const listLink = `http://localhost:3000/download/pdf/${pdfID}`;
+        const listLink = `https://list.campusdekho.ai/download/pdf/${pdfID}`;
         await sendCollegePreferenceList(userPaymentInfo.phone, userPaymentInfo.name, listLink);
         // req.session.pdfID = pdfID;
         // console.log(pdfID);
