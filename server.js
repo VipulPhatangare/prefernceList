@@ -10,7 +10,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const ExcelJS = require('exceljs');
 const fs = require('fs');
-
+const axios = require('axios');
 
 
 require('dotenv').config();
@@ -176,7 +176,7 @@ app.get('/takePaymentInfo',(req, res)=>{
 app.post('/saveStudentIfo', async (req, res) => {
     try {
         const userPaymentInfo = req.body;
-        console.log("saving student payment data: ", userPaymentInfo);
+        // console.log("saving student payment data: ", userPaymentInfo);
         req.session.userPaymentInfo = userPaymentInfo;
 
         return res.json({
@@ -1390,6 +1390,58 @@ app.get('/download/pdf/:id', async (req, res) => {
     }
 });
 
+async function sendCollegePreferenceList(mobileNumber, name, listLink) {
+    const templateName = "preference_list"; // Your template name approved in WATI
+    
+    const data = {
+        template_name: templateName,
+        broadcast_name: "College Preference Notification",
+        receivers: [
+            {
+                whatsappNumber: mobileNumber,
+                customParams: [
+                    {
+                        name: 'name', // matches {{name}} in template
+                        value: name
+                    },
+                    {
+                        name: 'listlink', // matches {{listlink}} in template
+                        value: listLink
+                    }
+                ]
+            }
+        ],
+        channel_number: process.env.CHANNEL_NUMBER
+    };
+
+    const endpoint = `${process.env.WATI_ENDPOINT}/api/v1/sendTemplateMessages`;
+    
+    console.log('Sending WhatsApp template:', { endpoint, payload: data });
+
+    try {
+        const response = await axios.post(endpoint, data, {
+            headers: {
+                'Authorization': `Bearer ${process.env.WATI_ACCESS_TOKEN}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return {
+            success: true,
+            status: response.status,
+            data: response.data
+        };
+    } catch (error) {
+        console.error('WhatsApp API Error:', error.response?.data || error.message);
+        return {
+            success: false,
+            error: error.response?.data || error.message
+        };
+    }
+}
+
+
 
 
 app.post('/savePdf', upload.single('pdf'), async (req, res) => {
@@ -1414,10 +1466,19 @@ app.post('/savePdf', upload.single('pdf'), async (req, res) => {
 
         await newPreferenceList.save();
         // console.log('prefrence list save..');
-        delete req.session.userPaymentInfo;
+        
         // console.log('prefrence list save..');
-        req.session.pdfID = newPreferenceList._id.toString();
-        console.log(req.session.pdfID);
+        const pdfID = newPreferenceList._id.toString();
+        // console.log(req.session.userPaymentInfo)
+        
+        const userPaymentInfo = req.session.userPaymentInfo;
+        // const listLink = `http://localhost:3000/download/pdf/${pdfID}`;
+        const listLink = `https://campusdekho.ai/download/pdf/${pdfID}`;
+        await sendCollegePreferenceList(userPaymentInfo.phone, userPaymentInfo.name, listLink);
+        // req.session.pdfID = pdfID;
+        // console.log(pdfID);
+
+        delete req.session.userPaymentInfo;
         res.json({ 
             success: true,
             message: 'PDF stored successfully'
