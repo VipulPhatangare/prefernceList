@@ -819,7 +819,7 @@ async function saveGeneratePdf() {
         formData.append('pdf', pdfBlob, 'preference_list.pdf');
         formData.append('exam', 'Engineering');
 
-        const response = await fetch('/savePdf/savePdf', {
+        const response = await fetch('/savePdfroute/savePdf', {
             method: 'POST',
             body: formData
         });

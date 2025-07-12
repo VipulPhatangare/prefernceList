@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const upload = multer();
+require('dotenv').config();
 const {connectDB, supabase} = require('../database/db');
 const {Pdf, Payment} = require('../database/schema');
 const axios = require('axios');
@@ -9,7 +10,13 @@ const axios = require('axios');
 
 async function sendCollegePreferenceList(mobileNumber, name, listLink) {
     const templateName = "preference_list"; // Your template name approved in WATI
-    
+    // console.log(mobileNumber, name, listLink);
+
+    const CHANNEL_NUMBER = process.env.CHANNEL_NUMBER;
+    const END_POINT = process.env.WATI_ENDPOINT;
+    const ACCESS_TOKEN = process.env.WATI_ACCESS_TOKEN;
+    // console.log(CHANNEL_NUMBER, END_POINT, ACCESS_TOKEN);
+
     const data = {
         template_name: templateName,
         broadcast_name: "College Preference Notification",
@@ -28,17 +35,17 @@ async function sendCollegePreferenceList(mobileNumber, name, listLink) {
                 ]
             }
         ],
-        channel_number: process.env.CHANNEL_NUMBER
+        channel_number: CHANNEL_NUMBER
     };
 
-    const endpoint = `${process.env.WATI_ENDPOINT}/api/v1/sendTemplateMessages`;
+    const endpoint = `${END_POINT}/api/v1/sendTemplateMessages`;
     
     // console.log('Sending WhatsApp template:', { endpoint, payload: data });
 
     try {
         const response = await axios.post(endpoint, data, {
             headers: {
-                'Authorization': `Bearer ${process.env.WATI_ACCESS_TOKEN}`,
+                'Authorization': `Bearer ${ACCESS_TOKEN}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
@@ -58,35 +65,49 @@ async function sendCollegePreferenceList(mobileNumber, name, listLink) {
     }
 }
 
+
 router.post('/savePdf', upload.single('pdf'), async (req, res) => {
     try {
-        // Check if file exists
+        // console.log('savePdf API called');
+
         if (!req.file) {
+            // console.log('No pdf uploaded');
             return res.status(400).json({
                 success: false,
                 message: 'No PDF file uploaded'
             });
         }
 
-        const exam = req.body.exam; // No need to parse, it's already an object
-        const pdfBuffer = req.file.buffer; 
-        const email = req.session.userPaymentInfo.email;
+        if (!req.session.userPaymentInfo) {
+            // console.log('Session expired or missing user info. Please complete the payment again.')
+            return res.status(400).json({
+                success: false,
+                message: 'Session expired or missing user info. Please complete the payment again.'
+            });
+        }
+
+        const { email, phone, name } = req.session.userPaymentInfo;
+        // console.log(email, phone, name);
+        const exam = req.body.exam;
+        const pdfBuffer = req.file.buffer;
         
         const newPreferenceList = new Pdf({
-            email: email,
+            email,
             examType: exam,
             pdf: pdfBuffer
         });
 
         await newPreferenceList.save();
-        
+
         const pdfID = newPreferenceList._id.toString();
-       
-        const userPaymentInfo = req.session.userPaymentInfo;
-        // const listLink = `http://localhost:3000/download/pdf/${pdfID}`;
         const listLink = `https://list.campusdekho.ai/download/pdf/${pdfID}`;
-        await sendCollegePreferenceList(userPaymentInfo.phone, userPaymentInfo.name, listLink);
+        // console.log(listLink);
+        await sendCollegePreferenceList(phone, name, listLink);
+
+        // Clean up session
         delete req.session.userPaymentInfo;
+        
+        // console.log('Msg send');
         res.json({ 
             success: true,
             message: 'PDF stored successfully'

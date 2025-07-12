@@ -46,7 +46,7 @@ app.use('/engineeringCollegeList',engineeringCollegeListRoutes);
 // savePdf
 
 const savePdfRoutes = require('./routes/savePdfroute'); 
-app.use('/savePdf',savePdfRoutes);
+app.use('/savePdfroute',savePdfRoutes);
 
 
 app.get('/download-payments-excel', async (req, res) => {
