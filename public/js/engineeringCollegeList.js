@@ -357,7 +357,7 @@ async function handleFormSubmit(e) {
 
 async function processPayment() {
     try {
-        const userPaymentInfoResponse = await fetch('/takePaymentInfo');
+        const userPaymentInfoResponse = await fetch('/engineeringCollegeList/takePaymentInfo');
         const userPaymentInfo = await userPaymentInfoResponse.json();
         
         const response = await fetch('/api/payment/create-order');
@@ -437,7 +437,7 @@ function handleRegionCheckboxChange(e) {
 // Data Fetching Functions
 async function fetchBranches() {
     try {
-        const response = await fetch('/fetchBranches');
+        const response = await fetch('/engineeringCollegeList/fetchBranches');
         let data = await response.json();
 
         branchSelect.innerHTML = '<option value="" disabled selected>Select branches</option>';
@@ -464,7 +464,7 @@ async function fetchBranches() {
 
 async function fetchCity() {
     try {
-        const response = await fetch('/fetchcity');
+        const response = await fetch('/engineeringCollegeList/fetchcity');
         const data = await response.json();
 
         regionCheckboxGroup.innerHTML = `
@@ -492,7 +492,7 @@ async function fetchCity() {
 
 async function fetchUniversity() {
     try {
-        const response = await fetch('/fetchUniversity');
+        const response = await fetch('/engineeringCollegeList/fetchUniversity');
         const data = await response.json();
 
         homeuniversitySelect.innerHTML = `<option value="" disabled selected>Select your home university</option>`;
@@ -511,7 +511,7 @@ async function fetchUniversity() {
 // College List Functions
 async function generateCollegeList(formData) {
     try {
-        const response = await fetch('/College_list', {
+        const response = await fetch('/engineeringCollegeList/College_list', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -819,7 +819,7 @@ async function saveGeneratePdf() {
         formData.append('pdf', pdfBlob, 'preference_list.pdf');
         formData.append('exam', 'Engineering');
 
-        const response = await fetch('/savePdf', {
+        const response = await fetch('/savePdf/savePdf', {
             method: 'POST',
             body: formData
         });

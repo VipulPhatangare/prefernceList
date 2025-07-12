@@ -274,9 +274,9 @@
         <header class="text-center mb-5">
             <h1 class="fw-bold mb-3">Best <span style="color:#0054A6">Plans</span> For Your College Preference List</h1>
             <p class="lead">Choose the plan that's right for your college admission process and get your personalized preference list.</p>
-            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#videoModal">
+            <!-- <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#videoModal">
                 <i class="fas fa-play me-2"></i> Watch Video
-            </button>
+            </button> -->
         </header>
 
         <!-- Video Section -->
@@ -377,7 +377,7 @@
                         <iframe class="shorts-iframe" 
                                 src="https://www.youtube.com/embed/cY6TmbCXz6Q?autoplay=1&modestbranding=1&rel=0" 
                                 frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                 allowfullscreen></iframe>
                     </div>
                 </div>
@@ -530,7 +530,7 @@
             
             const data = await response.json();
             if(data.isOk){
-                window.location.href = '/collegeList';
+                window.location.href = '/engineeringCollegeList';
             }
         });
 
@@ -542,6 +542,10 @@
         const videoModal = document.getElementById('videoModal');
         let videoIframe = document.querySelector('.shorts-iframe');
         
+        videoModal.addEventListener('show.bs.modal', function() {
+            const iframeSrc = videoIframe.src;
+            videoIframe.src = iframeSrc.replace('autoplay=0', 'autoplay=1');
+        });
         // Reset video when modal closes
         videoModal.addEventListener('hidden.bs.modal', function() {
             // Store the current src
