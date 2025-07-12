@@ -547,11 +547,8 @@
             // Store the current src
             const currentSrc = videoIframe.src;
             // Reset the src to stop playback
-            videoIframe.src = '';
-            // Restore the src after a brief delay
-            setTimeout(() => {
-                videoIframe.src = currentSrc;
-            }, 100);
+            videoIframe.src = currentSrc.replace('autoplay=1', 'autoplay=0');
+            
         });
     </script>
 </body>
