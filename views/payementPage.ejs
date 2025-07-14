@@ -208,6 +208,87 @@
                 height: 80vh;
             }
         }
+
+        /* Switch Button Styles */
+        .switch-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .switch-btn {
+            position: relative;
+            display: inline-block;
+            width: 300px;
+            height: 50px;
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .switch-btn input {
+            display: none;
+        }
+
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: .4s;
+        }
+
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 50px;
+            width: 150px;
+            /* left: 4px;
+            bottom: 4px; */
+            background-color: var(--primary-color);
+            transition: .4s;
+            /* border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px; */
+        }
+
+        .switch-btn input:checked + .switch-slider:before {
+            transform: translateX(162px);
+        }
+
+        .switch-labels {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            box-sizing: border-box;
+            font-weight: 600;
+            color: #333;
+            z-index: 1;
+        }
+
+        .switch-btn input:checked + .switch-slider .switch-labels span:first-child {
+            color: #333;
+            
+        }
+
+        .switch-btn input:checked + .switch-slider .switch-labels span:last-child {
+            color: #fff;
+            
+        }
+
+        .switch-btn input:not(:checked) + .switch-slider .switch-labels span:first-child {
+            color: #fff;
+        }
+
+        .switch-btn input:not(:checked) + .switch-slider .switch-labels span:last-child {
+            color: #333;
+        }
     </style>
 </head>
 
@@ -258,9 +339,6 @@
                     </li>
                 </ul>
                 <div class="d-flex">
-                    <!-- <a href="https://campusdekho.ai/preference_list_generatior" class="btn btn-outline-primary me-2">
-                        Preference List
-                    </a> -->
                     <a href="https://campusdekho.ai/student/logout" class="btn btn-outline-primary">
                         Log Out
                     </a>
@@ -274,17 +352,57 @@
         <header class="text-center mb-5">
             <h1 class="fw-bold mb-3">Best <span style="color:#0054A6">Plans</span> For Your College Preference List</h1>
             <p class="lead">Choose the plan that's right for your college admission process and get your personalized preference list.</p>
-            <!-- <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#videoModal">
-                <i class="fas fa-play me-2"></i> Watch Video
-            </button> -->
         </header>
 
-        <!-- Video Section -->
-        
+        <!-- Switch Button -->
+        <div class="switch-container">
+            <label class="switch-btn">
+                <input type="checkbox" id="courseSwitch">
+                <span class="switch-slider">
+                    <div class="switch-labels">
+                        <span>Engineering</span>
+                        <span>Pharmacy</span>
+                    </div>
+                </span>
+            </label>
+        </div>
 
+        <!-- Plans -->
         <div class="row g-4" style="display:flex; justify-content: center;">
-            <!-- Basic Plan -->
-            <div class="col-md-4">
+            <div class="col-md-4" id="basic_plan">
+                <div class="plan-card basic p-4 h-100">
+                    <div class="text-center mb-4">
+                        <h5 class="fw-bold" style="font-size: 22px;">Preference List</h5>
+                        <p class="text-muted" style="font-size: 18px;">Basic Package</p>
+                        <div class="plan-price">₹249</div>
+                    </div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Personalized preference list</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="199_choice">Up to 75 college choices</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Based on your CET/Percentile</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Sorted by cut-off, location, and ranking</span>
+                        </li>
+                        <li class="mb-2 feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Top Choice Colleges</span>
+                        </li>
+                    </ul>
+                    <button class="btn btn-primary w-100" onclick="openModal('Basic Package')">Select Plan</button>
+                </div>
+            </div>
+            
+            <div class="col-md-4" id="standard_plan">
                 <div class="plan-card basic p-4 h-100">
                     <div class="text-center mb-4">
                         <h5 class="fw-bold" style="font-size: 22px;">Preference List</h5>
@@ -298,7 +416,7 @@
                         </li>
                         <li class="mb-2 feature-item">
                             <i class="fas fa-check-circle"></i>
-                            <span>Up to 150 college choices</span>
+                            <span id="499_choice">Up to 150 college choices</span>
                         </li>
                         <li class="mb-2 feature-item">
                             <i class="fas fa-check-circle"></i>
@@ -316,9 +434,8 @@
                     <button class="btn btn-primary w-100" onclick="openModal('Standard Package')">Select Plan</button>
                 </div>
             </div>
-
-            <!-- Plus Plan -->
-            <div class="col-md-4">
+         
+            <div class="col-md-4" id="premium_plan">
                 <div class="plan-card premium p-4 h-100">
                     <div class="text-center mb-4">
                         <h5 class="fw-bold" style="font-size: 22px;">Preference List</h5>
@@ -332,7 +449,7 @@
                         </li>
                         <li class="mb-2 feature-item">
                             <i class="fas fa-check-circle"></i>
-                            <span>Up to 300 college choices</span>
+                            <span id="999_choice">Up to 300 college choices</span>
                         </li>
                         <li class="mb-2 feature-item">
                             <i class="fas fa-check-circle"></i>
@@ -373,7 +490,6 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="shorts-container">
-                        <!-- Using the regular YouTube embed URL instead of /shorts/ -->
                         <iframe class="shorts-iframe" 
                                 src="https://www.youtube.com/embed/cY6TmbCXz6Q?autoplay=1&modestbranding=1&rel=0" 
                                 frameborder="0" 
@@ -487,16 +603,50 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const courseSwitch = document.getElementById('courseSwitch');
+
+            sessionStorage.setItem("pageDirection", "engineering");
+            // Set default to Engineering
+            updatePlanDisplay(false);
+            
+            // Add event listener for switch change
+            courseSwitch.addEventListener('change', function() {
+                updatePlanDisplay(this.checked);
+            });
+            
+            function updatePlanDisplay(isPharmacy) {
+                
+                if (isPharmacy) {
+                    sessionStorage.setItem("pageDirection", "pharmacy");
+                    document.getElementById('basic_plan').style.display = "none";
+                    document.getElementById('499_choice').textContent = 'Up to 200 college choices';
+                    document.getElementById('premium_plan').style.display = "none";
+                } else {
+
+                    sessionStorage.setItem("pageDirection", "engineering");
+                    document.getElementById('basic_plan').style.display = "block";
+                    document.getElementById('premium_plan').style.display = "block";
+                    document.getElementById('199_choice').textContent = 'Up to 100 college choices';
+                    document.getElementById('499_choice').textContent = 'Up to 200 college choices';
+                    document.getElementById('999_choice').textContent = 'Up to 300 college choices';
+                }
+                // console.log(sessionStorage.getItem("pageDirection"));
+            }
+        });
+
         // Open modal with selected plan
         function openModal(planName) {
             const modal = new bootstrap.Modal(document.getElementById('planModal'));
             const modalPlanName = document.getElementById('modalPlanName');
             const modalPlanPrice = document.getElementById('modalPlanPrice');
             
-            modalPlanName.textContent = planName ;
+            modalPlanName.textContent = planName;
             
-            // Set price based on plan
-            if (planName === 'Standard Package') {
+            // Set price based on plan Basic Package
+            if (planName === 'Basic Package') {
+                modalPlanPrice.textContent = '₹199 (one-time payment)';
+            } else if (planName === 'Standard Package') {
                 modalPlanPrice.textContent = '₹499 (one-time payment)';
             } else {
                 modalPlanPrice.textContent = '₹999 (one-time payment)';
@@ -514,13 +664,15 @@
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const plan = document.getElementById('modalPlanName').textContent.replace(' Plan', '');
+            const isPharmacy = document.getElementById('courseSwitch').checked;
             
-            let amount = 499;
+            let amount = 249;
+            if (plan === 'Standard Package') amount = 499;
             if (plan === 'Premium Package') amount = 999;
 
-            userPaymentInfo = { name, email, phone, amount , plan};
+            userPaymentInfo = { name, email, phone, amount, plan };
 
-            const response = await fetch('/saveStudentIfo',{
+            const response = await fetch('/saveStudentIfo', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -529,8 +681,12 @@
             });
             
             const data = await response.json();
-            if(data.isOk){
-                window.location.href = '/engineeringCollegeList';
+            if(data.isOk) {
+                if(sessionStorage.getItem("pageDirection") == 'pharmacy') {
+                    window.location.href = '/pharmacyCollegeList';
+                } else {
+                    window.location.href = '/engineeringCollegeList';
+                }
             }
         });
 
@@ -539,6 +695,7 @@
         planModal.addEventListener('hidden.bs.modal', function() {
             document.getElementById('planForm').reset();
         });
+        
         const videoModal = document.getElementById('videoModal');
         let videoIframe = document.querySelector('.shorts-iframe');
         
@@ -546,15 +703,12 @@
             const iframeSrc = videoIframe.src;
             videoIframe.src = iframeSrc.replace('autoplay=0', 'autoplay=1');
         });
+        
         // Reset video when modal closes
         videoModal.addEventListener('hidden.bs.modal', function() {
-            // Store the current src
             const currentSrc = videoIframe.src;
-            // Reset the src to stop playback
             videoIframe.src = currentSrc.replace('autoplay=1', 'autoplay=0');
-            
         });
     </script>
 </body>
-
 </html>

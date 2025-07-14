@@ -15,7 +15,7 @@
     <title>CampusDekho</title>
     <link rel="icon" href="/asset/cd.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/engineeringCollegeList.css">
+    <link rel="stylesheet" href="/css/pharmacyCollegeList.css">
 </head>
 
 <body>
@@ -25,6 +25,7 @@
         <header>
             <h1>Preference list Generator</h1>
         </header>
+        
         <div class="note-box">
             <strong>Note:</strong> Please fill in the information carefully. This list is generated based on last year's cutoff data. Sometimes, the number of colleges may be fewer than you expect due to limited available choices, so please select your options carefully.
         </div>
@@ -104,40 +105,12 @@
                             All
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="CIVIL" class="branch-checkbox">
-                            Civil
+                            <input type="checkbox" name="branchCategory" value="Pharm D ( Doctor of Pharmacy)" class="branch-checkbox">
+                            Pharm D ( Doctor of Pharmacy)
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="COMP" class="branch-checkbox">
-                            Computer Science
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="IT" class="branch-checkbox">
-                            Information Technology
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="COMPAI" class="branch-checkbox">
-                            CSE (Artificial Intelligence)
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="AI" class="branch-checkbox">
-                            Artificial Intelligence
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="ELECTRICAL" class="branch-checkbox">
-                            Electrical
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="ENTC" class="branch-checkbox">
-                            ENTC
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="MECH" class="branch-checkbox">
-                            Mechanical
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="branchCategory" value="OTHER" class="branch-checkbox" id="otherBranchCheckbox">
-                            Other
+                            <input type="checkbox" name="branchCategory" value="Pharmacy" class="branch-checkbox">
+                            Pharmacy
                         </label>
                     </div>
                 </div>
@@ -148,7 +121,6 @@
                     <div id="selectedBranchesContainer" class="selected-branches-container"></div>
                     <select id="branch" class="hidden"></select>
                 </div>
-                
 
 
                 <div class="form-group">
@@ -224,19 +196,10 @@
         <span id="notificationMessage">Message goes here</span>
     </div>
 
-
-    <div id="rankWarningPopup" class="modal-overlay">
-    <div class="modal-content">
-        <h3>Important Notice</h3>
-        <p>Your percentile is less than or equal to 65, so all branch categories will be automatically selected and locked, and Pune will be included in your city selection because the number of available choices is limited.</p>
-        <button id="continueBtn" class="modal-btn">Continue</button>
-    </div>
-</div>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="/js/engineeringCollegeList.js"></script>
+    <script src="/js/pharmacyCollegeList.js"></script>
     <script>
         const razorpayKeyId = "<%= razorpayKeyId %>";
         const PaymentPrice = "<%= price %>";

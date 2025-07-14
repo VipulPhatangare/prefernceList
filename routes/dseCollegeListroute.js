@@ -10,12 +10,14 @@ const central_object = {
 
 router.get('/', async (req, res) => {
 
+    res.render('dseCollegeList', { razorpayKeyId: process.env.RAZORPAY_KEY_ID , price: 499}); //req.session.userPaymentInfo.amount
+
     // console.log(req.session.userPaymentInfo);
-    if(req.session.userPaymentInfo){
-        res.render('engineeringCollegeList', { razorpayKeyId: process.env.RAZORPAY_KEY_ID , price: req.session.userPaymentInfo.amount});
-    }else{
-        res.redirect('/');
-    }
+    // if(req.session.userPaymentInfo){
+    //     res.render('dseCollegeList', { razorpayKeyId: process.env.RAZORPAY_KEY_ID , price: req.session.userPaymentInfo.amount});
+    // }else{
+    //     res.redirect('/');
+    // }
 });
 
 router.get('/takePaymentInfo',(req, res)=>{
@@ -77,28 +79,15 @@ router.get('/fetchUniversity', async (req, res) => {
 });
 
 
-function customRound(value) {
-    if (value >= 99.6) return 100;
-    const intPart = Math.floor(value);
-    const decimal = value - intPart;
-
-    if (decimal > 0 && decimal <= 0.4) {
-        return intPart + 0.5;
-    } else if (decimal > 0.4) {
-        return intPart + 1;
-    } else {
-        return value;
-    }
-}
 
 async function getRankFromPercentile(percentile) {
-    const roundedPercentile = customRound(percentile);
+    const roundedPercentile = Math.floor(percentile);
 
     try {
         const { data, error } = await supabase
-            .from('percentile_to_rank')
+            .from('dse_percentage_to_rank')
             .select('rank')
-            .eq('percentile', roundedPercentile)
+            .eq('percentage', roundedPercentile)
             .single();
         
         if (error) throw error;
@@ -108,8 +97,6 @@ async function getRankFromPercentile(percentile) {
         throw error;
     }
 }
-
-
 
 async function getSelectedBranchCode(selected_branches) {
     try {
@@ -126,60 +113,34 @@ async function getSelectedBranchCode(selected_branches) {
     }
 }
 
-function calculateRankRange(formData, amount) {
+function calculateRankRange(formData) {
 
     let subMinRank = 0;
+
     let minRank = formData.generalRank;
-    
-    if(amount == 199){
-        if (formData.generalRank < 5000) {
-            minRank = 0;
-        }else if(formData.generalRank < 20000){
-            subMinRank = 6000;
-        }else if(formData.generalRank < 30000){
-            subMinRank = 7000;
-        }else if(formData.generalRank < 40000){
-            subMinRank = 8000;
-        }else if(formData.generalRank < 50000){
-            subMinRank = 9000;
-        }else if(formData.generalRank < 60000){
-            subMinRank = 10000;
-        }else if(formData.generalRank < 70000){
-            subMinRank = 11000;
-        }else if(formData.generalRank < 80000){
-            subMinRank = 12000;
-        }else if(formData.generalRank < 90000){
-            subMinRank = 13000;
-        }else if(formData.generalRank < 100000){
-            subMinRank = 14000;
-        }else {
-            subMinRank = 15000;
-        }
-    }else{
-        if (formData.generalRank < 8000) {
-            minRank = 0;
-        }else if(formData.generalRank < 20000){
-            subMinRank = 8000;
-        }else if(formData.generalRank < 30000){
-            subMinRank = 9000;
-        }else if(formData.generalRank < 40000){
-            subMinRank = 10000;
-        }else if(formData.generalRank < 50000){
-            subMinRank = 11000;
-        }else if(formData.generalRank < 60000){
-            subMinRank = 12000;
-        }else if(formData.generalRank < 70000){
-            subMinRank = 13000;
-        }else if(formData.generalRank < 80000){
-            subMinRank = 14000;
-        }else if(formData.generalRank < 90000){
-            subMinRank = 15000;
-        }else if(formData.generalRank < 100000){
-            subMinRank = 16000;
-        }else {
-            subMinRank = 18000;
-        }
+
+    if (formData.generalRank < 4000) {
+        minRank = 0;
+    }else if(formData.generalRank < 7000){
+        subMinRank = 4000;
+    }else if(formData.generalRank < 12000){
+        subMinRank = 7000;
+    }else if(formData.generalRank < 15000){
+        subMinRank = 8000;
+    }else if(formData.generalRank < 20000){
+        subMinRank = 9000;
+    }else if(formData.generalRank < 25000){
+        subMinRank = 10000;
+    }else if(formData.generalRank < 30000){
+        subMinRank = 11000;
+    }else if(formData.generalRank < 35000){
+        subMinRank = 12000;
+    }else if(formData.generalRank < 40000){
+        subMinRank = 13000;
+    }else {
+        subMinRank = 15000;
     }
+    
 
     minRank -= subMinRank;
     new_data_of_student.minRank = minRank;
@@ -1179,10 +1140,8 @@ function college_filter(colleges, formData) {
 
 router.post('/College_list', async (req, res) => {
     const formData = req.body;
-    // console.log(formData);
-    console.log(req.session.userPaymentInfo)
-    let amount = req.session.userPaymentInfo.amount;
-    console.log(amount)
+    console.log(formData);
+
     clear_new_data_function();
 
     try {
@@ -1190,7 +1149,7 @@ router.post('/College_list', async (req, res) => {
         central_object.percentile = formData.generalRank;
 
         formData.generalRank = await getRankFromPercentile(formData.generalRank);
-        // console.log(formData);
+        console.log(formData);
 
         if(central_object.percentile < 80 && formData.branchCategories[0] != 'All'){
             formData.branchCategories.push('COMP');
@@ -1198,29 +1157,29 @@ router.post('/College_list', async (req, res) => {
         }
 
         new_data_of_student.selected_branches_code = await getSelectedBranchCode(formData.selected_branches);
-        calculateRankRange(formData, amount);
-
+        calculateRankRange(formData);
+        console.log(new_data_of_student);
         getCasteColumns(formData.caste, formData.gender);
         if (formData.specialReservation != 'No') {
             new_data_of_student.specialReservation = formData.specialReservation;
         }
 
         let colleges = await getColleges(formData);
-        let college_counts;
-        let count = req.session.userPaymentInfo.amount;
-        if(count == 499){
-            college_counts = 150;
-        }else if(count == 999){
-            college_counts = 300;
-        }else if(count == 199){
-            college_counts = 75;
-        }else{
-            return res.send('Do not change the college count using url. Hahahaa.');
-        }
+        // let college_counts;
+        // let count = req.session.userPaymentInfo.amount;
+        // if(count == 499){
+        //     college_counts = 150;
+        // }else if(count == 999){
+        //     college_counts = 300;
+        // }else{
+        //     return res.send('Do not change the college count using url. Hahahaa.');
+        // }
 
-        colleges = colleges.slice(0,college_counts);
-        // console.log(colleges);
-        res.json(colleges);
+        
+
+        // colleges = colleges.slice(0,college_counts);
+        // // console.log(colleges);
+        // res.json(colleges);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to fetch colleges' });

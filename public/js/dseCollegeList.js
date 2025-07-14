@@ -151,21 +151,21 @@ function showNotification(message, type = 'info') {
 function showPaymentModal(amount, callback) {
     const modal = document.createElement('div');
     modal.className = 'payment-modal';
-
-    // Final total must be 499
-    // const totalAmount = 499;
-    const basePrice = (amount / 1.21).toFixed(2); // ≈ 412.40
+    
+    // Calculate the breakdown (assuming amount is the total)
+    console.log(amount);
+    const basePrice = amount; // Assuming 20% total tax (9% CGST + 9% SGST + 2% convenience)
     const cgst = (basePrice * 0.09).toFixed(2);
     const sgst = (basePrice * 0.09).toFixed(2);
     const convenienceFee = (basePrice * 0.03).toFixed(2);
-    const finalAmount = (basePrice * 1.21).toFixed(2); // Should be 499
-
+    let totalAmmount = (basePrice * 1.21).toFixed(2);
+    // totalAmmount += amount;
     modal.innerHTML = `
         <div class="payment-modal-content">
             <h3>Confirm Payment</h3>
-            <p>To proceed with generating your personalized college list, please complete the payment of ₹${finalAmount}. A detailed cost breakdown is provided below.</p>
+            <p>To proceed with generating your personalized college list, please complete the payment of ₹${amount} + applicable taxes and fees. A detailed cost breakdown is provided below.</p>
             
-            <div class="payment-breakdown">
+            <div class="payment-breakdown" >
                 <table style="width: 100%;">
                     <tr>
                         <td style="text-align: left;">Base Price</td>
@@ -175,7 +175,7 @@ function showPaymentModal(amount, callback) {
                         <td style="text-align: left;">CGST (9%)</td>
                         <td style="text-align: right;">₹${cgst}</td>
                     </tr>
-                    <tr>
+                     <tr>
                         <td style="text-align: left;">SGST (9%)</td>
                         <td style="text-align: right;">₹${sgst}</td>
                     </tr>
@@ -184,8 +184,8 @@ function showPaymentModal(amount, callback) {
                         <td style="text-align: right;">₹${convenienceFee}</td>
                     </tr>
                     <tr class="total-row">
-                        <td style="text-align: left;"><strong>Total Payable</strong></td>
-                        <td style="text-align: right;"><strong>₹${finalAmount}</strong></td>
+                        <td style="text-align: left;"><strong >Total Payable</strong></td>
+                        <td style="text-align: right;"><strong  >₹${totalAmmount}</strong></td>
                     </tr>
                     <tr class="gst-row">
                         <td colspan="2" style="text-align: center; font-size: 1.1em; padding-top: 1em;">
@@ -201,20 +201,19 @@ function showPaymentModal(amount, callback) {
             </div>
         </div>
     `;
-
+    
     document.body.appendChild(modal);
-
+    
     document.getElementById('confirmPaymentBtn').addEventListener('click', () => {
         document.body.removeChild(modal);
         callback(true);
     });
-
+    
     document.getElementById('cancelPaymentBtn').addEventListener('click', () => {
         document.body.removeChild(modal);
         callback(false);
     });
 }
-
 
 function updateSelectedBranchCategories() {
     central_object.branchCategories = [];
@@ -375,49 +374,55 @@ async function handleFormSubmit(e) {
 
     central_object.formData = formData;
 
-    // Validate rank is positive integer
-    if (isNaN(formData.generalRank)) {
-        showNotification('Please enter a valid percentile', 'error');
-        loadingContainer.style.display = 'none';
-        return;
-    }
-
     try {
-        // Show payment confirmation modal
-        showPaymentModal(PaymentPrice, async (confirmed) => {
-            if (confirmed) {
-                const paymentSuccess = await processPayment();
-                
-                if (paymentSuccess) {
-                    loadingContainer.style.display = 'flex';
-                    showNotification('Payment successful! Generating your list...', 'success');
-                    // If payment is successful, generate the college list
-                    setTimeout(() => {
-                        generateCollegeList(formData)
-                            .finally(() => {
-                                loadingContainer.style.display = 'none';
-                                // Hide the submit button after successful generation
-                                if (!hasGeneratedList) {
-                                    submitBtn.style.display = 'none';
-                                    hasGeneratedList = true;
-                                }
-                            });
-                    }, 100);
-                    document.getElementById('backToHome').style.display = 'block';
-                } else {
-                    showNotification('Payment failed or was cancelled', 'error');
-                    loadingContainer.style.display = 'none';
-                }
-            } else {
-                showNotification('Payment cancelled', 'info');
-                loadingContainer.style.display = 'none';
-            }
-        });
+        await generateCollegeList(formData);
     } catch (error) {
-        console.error('Error:', error);
-        showNotification('An error occurred. Please try again.', 'error');
-        loadingContainer.style.display = 'none';
+        console.log(error);
     }
+    
+    // Validate rank is positive integer
+    // if (isNaN(formData.generalRank)) {
+    //     showNotification('Please enter a valid percentile', 'error');
+    //     loadingContainer.style.display = 'none';
+    //     return;
+    // }
+
+    // try {
+    //     // Show payment confirmation modal
+    //     showPaymentModal(PaymentPrice, async (confirmed) => {
+    //         if (confirmed) {
+    //             const paymentSuccess = await processPayment();
+                
+    //             if (paymentSuccess) {
+    //                 loadingContainer.style.display = 'flex';
+    //                 showNotification('Payment successful! Generating your list...', 'success');
+    //                 // If payment is successful, generate the college list
+    //                 setTimeout(() => {
+    //                     generateCollegeList(formData)
+    //                         .finally(() => {
+    //                             loadingContainer.style.display = 'none';
+    //                             // Hide the submit button after successful generation
+    //                             if (!hasGeneratedList) {
+    //                                 submitBtn.style.display = 'none';
+    //                                 hasGeneratedList = true;
+    //                             }
+    //                         });
+    //                 }, 100);
+    //                 document.getElementById('backToHome').style.display = 'block';
+    //             } else {
+    //                 showNotification('Payment failed or was cancelled', 'error');
+    //                 loadingContainer.style.display = 'none';
+    //             }
+    //         } else {
+    //             showNotification('Payment cancelled', 'info');
+    //             loadingContainer.style.display = 'none';
+    //         }
+    //     });
+    // } catch (error) {
+    //     console.error('Error:', error);
+    //     showNotification('An error occurred. Please try again.', 'error');
+    //     loadingContainer.style.display = 'none';
+    // }
 }
 
 
@@ -425,7 +430,7 @@ async function handleFormSubmit(e) {
 
 async function processPayment() {
     try {
-        const userPaymentInfoResponse = await fetch('/engineeringCollegeList/takePaymentInfo');
+        const userPaymentInfoResponse = await fetch('/dseCollegeList/takePaymentInfo');
         const userPaymentInfo = await userPaymentInfoResponse.json();
         
         const response = await fetch('/payment/api/payment/create-order');
@@ -544,7 +549,7 @@ function resetLowPercentileRules() {
 // Data Fetching Functions
 async function fetchBranches() {
     try {
-        const response = await fetch('/engineeringCollegeList/fetchBranches');
+        const response = await fetch('/dseCollegeList/fetchBranches');
         let data = await response.json();
 
         branchSelect.innerHTML = '<option value="" disabled selected>Select branches</option>';
@@ -571,7 +576,7 @@ async function fetchBranches() {
 
 async function fetchCity() {
     try {
-        const response = await fetch('/engineeringCollegeList/fetchcity');
+        const response = await fetch('/dseCollegeList/fetchcity');
         const data = await response.json();
 
         regionCheckboxGroup.innerHTML = `
@@ -599,7 +604,7 @@ async function fetchCity() {
 
 async function fetchUniversity() {
     try {
-        const response = await fetch('/engineeringCollegeList/fetchUniversity');
+        const response = await fetch('/dseCollegeList/fetchUniversity');
         const data = await response.json();
 
         homeuniversitySelect.innerHTML = `<option value="" disabled selected>Select your home university</option>`;
@@ -618,7 +623,7 @@ async function fetchUniversity() {
 // College List Functions
 async function generateCollegeList(formData) {
     try {
-        const response = await fetch('/engineeringCollegeList/College_list', {
+        const response = await fetch('/dseCollegeList/College_list', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

@@ -45,7 +45,7 @@ downloadPdfBtn.addEventListener('click', generatePdf);
 document.addEventListener("DOMContentLoaded", initialize);
 
 async function initialize() {
-    await fetchBranches();
+    
     await fetchCity();
     await fetchUniversity();
     initBranchSelection();
@@ -68,14 +68,6 @@ function initBranchSelection() {
 }
 
 function handleBranchCategoryChange(checkbox) {
-    if (isLowPercentile) {
-        // Revert changes for low percentile
-        const allCheckbox = document.querySelector('.branch-checkbox[data-all="true"]');
-        allCheckbox.checked = true;
-        checkbox.checked = false;
-        return;
-    }
-
     if (checkbox.dataset.all === 'true') {
         // "All" was checked
         if (checkbox.checked) {
@@ -147,6 +139,7 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+
 // Payment confirmation modal
 function showPaymentModal(amount, callback) {
     const modal = document.createElement('div');
@@ -214,7 +207,6 @@ function showPaymentModal(amount, callback) {
         callback(false);
     });
 }
-
 
 function updateSelectedBranchCategories() {
     central_object.branchCategories = [];
@@ -289,65 +281,6 @@ function handleCasteChange() {
 }
 
 
-// Add these variables at the top
-const rankWarningPopup = document.getElementById('rankWarningPopup');
-const continueBtn = document.getElementById('continueBtn');
-const generalRankInput = document.getElementById('generalRank');
-let isLowPercentile = false;
-
-// Add this event listener after DOMContentLoaded
-generalRankInput.addEventListener('change', checkRankAndShowPopup);
-
-// Add this function
-function checkRankAndShowPopup() {
-    const percentile = parseFloat(generalRankInput.value);
-    
-    if (percentile <= 65 && !isNaN(percentile)) {
-        rankWarningPopup.classList.add('active');
-        isLowPercentile = true;
-    } else {
-        resetLowPercentileRules();
-    }
-}
-
-// Add this event listener for continue button
-continueBtn.addEventListener('click', () => {
-    rankWarningPopup.classList.remove('active');
-    applyLowPercentileRules();
-});
-
-function applyLowPercentileRules() {
-    if (!isLowPercentile) return;
-
-    // Select "All" in branch categories and disable others
-    const allCheckbox = document.querySelector('.branch-checkbox[data-all="true"]');
-    allCheckbox.checked = true;
-    central_object.branchCategories = ['All'];
-    
-    // Disable other branch checkboxes
-    document.querySelectorAll('.branch-checkbox:not([data-all="true"])').forEach(cb => {
-        cb.checked = false;
-        cb.disabled = true;
-        cb.closest('.checkbox-label').classList.add('disabled');
-    });
-    
-    // Hide branch selection group
-    branchSelectionGroup.classList.add('hidden');
-    
-    // Ensure Pune is selected in cities
-    const allCityCheckbox = document.querySelector('input[name="region"][value="All"]');
-    const puneCheckbox = document.querySelector('input[name="region"][value="Pune"]');
-    
-    if (!allCityCheckbox.checked) {
-        if (puneCheckbox) {
-            puneCheckbox.checked = true;
-            puneCheckbox.disabled = true;
-            puneCheckbox.closest('.checkbox-label').classList.add('disabled');
-        }
-    }
-}
-
-
 
 async function handleFormSubmit(e) {
     e.preventDefault();
@@ -381,6 +314,13 @@ async function handleFormSubmit(e) {
         loadingContainer.style.display = 'none';
         return;
     }
+
+    // try {
+    //     await generateCollegeList(formData);
+    // } catch (error) {
+    //     console.log(error);
+    // }
+    
 
     try {
         // Show payment confirmation modal
@@ -421,11 +361,9 @@ async function handleFormSubmit(e) {
 }
 
 
-
-
 async function processPayment() {
     try {
-        const userPaymentInfoResponse = await fetch('/engineeringCollegeList/takePaymentInfo');
+        const userPaymentInfoResponse = await fetch('/pharmacyCollegeList/takePaymentInfo');
         const userPaymentInfo = await userPaymentInfoResponse.json();
         
         const response = await fetch('/payment/api/payment/create-order');
@@ -493,85 +431,19 @@ async function processPayment() {
 
 
 function handleRegionCheckboxChange(e) {
-    if (isLowPercentile && e.target.value === "Pune" && !e.target.checked) {
-        e.target.checked = true;
-        return;
-    }
-
     if (e.target.value === "All" && e.target.checked) {
         const otherCheckboxes = document.querySelectorAll('input[name="region"]:not([value="All"])');
-        otherCheckboxes.forEach(cb => {
-            cb.checked = false;
-            if (isLowPercentile && cb.value === "Pune") {
-                cb.disabled = true;
-                cb.closest('.checkbox-label').classList.add('disabled');
-            } else {
-                cb.disabled = false;
-                cb.closest('.checkbox-label').classList.remove('disabled');
-            }
-        });
+        otherCheckboxes.forEach(cb => cb.checked = false);
     } else if (e.target.value !== "All" && e.target.checked) {
         const allCheckbox = document.querySelector('input[name="region"][value="All"]');
         allCheckbox.checked = false;
-        
-        if (isLowPercentile) {
-            const puneCheckbox = document.querySelector('input[name="region"][value="Pune"]');
-            if (puneCheckbox && !puneCheckbox.checked) {
-                puneCheckbox.checked = true;
-                puneCheckbox.disabled = true;
-                puneCheckbox.closest('.checkbox-label').classList.add('disabled');
-            }
-        }
     }
 }
 
-function resetLowPercentileRules() {
-    if (isLowPercentile) {
-        document.querySelectorAll('.branch-checkbox').forEach(cb => {
-            cb.disabled = false;
-            cb.closest('.checkbox-label').classList.remove('disabled');
-        });
-        
-        document.querySelectorAll('input[name="region"]').forEach(cb => {
-            cb.disabled = false;
-            cb.closest('.checkbox-label').classList.remove('disabled');
-        });
-        
-        isLowPercentile = false;
-    }
-}
-
-// Data Fetching Functions
-async function fetchBranches() {
-    try {
-        const response = await fetch('/engineeringCollegeList/fetchBranches');
-        let data = await response.json();
-
-        branchSelect.innerHTML = '<option value="" disabled selected>Select branches</option>';
-
-        data = data.reduce((acc, curr) => {
-            if (!acc.some(item => item.branch_name === curr.branch_name)) {
-                acc.push(curr);
-            }
-            return acc;
-        }, []);
-
-        data.forEach(element => {
-            if(element.Branch_category == 'OTHER'){
-                const option = document.createElement('option');
-                option.value = `${element.branch_name}`;
-                option.innerHTML = `${element.branch_name}`;
-                branchSelect.appendChild(option);
-            }
-        });
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 async function fetchCity() {
     try {
-        const response = await fetch('/engineeringCollegeList/fetchcity');
+        const response = await fetch('/pharmacyCollegeList/fetchcity');
         const data = await response.json();
 
         regionCheckboxGroup.innerHTML = `
@@ -599,7 +471,7 @@ async function fetchCity() {
 
 async function fetchUniversity() {
     try {
-        const response = await fetch('/engineeringCollegeList/fetchUniversity');
+        const response = await fetch('/pharmacyCollegeList/fetchUniversity');
         const data = await response.json();
 
         homeuniversitySelect.innerHTML = `<option value="" disabled selected>Select your home university</option>`;
@@ -618,7 +490,7 @@ async function fetchUniversity() {
 // College List Functions
 async function generateCollegeList(formData) {
     try {
-        const response = await fetch('/engineeringCollegeList/College_list', {
+        const response = await fetch('/pharmacyCollegeList/College_list', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -775,23 +647,8 @@ async function saveGeneratePdf() {
         doc.text(`Home University: ${central_object.formData.homeuniversity}`, 14, 42);
         doc.text(`Caste: ${central_object.formData.caste}`, 14, 48);
 
-        // Format branch category
-        const branch_cat_obj = {
-            All: 'All',
-            CIVIL: 'Civil',
-            COMP: 'Computer Science',
-            IT: 'Information Technology',
-            COMPAI: 'CSE (Artificial Intelligence)',
-            AI: 'Artificial Intelligence',
-            ELECTRICAL: 'Electrical',
-            ENTC: 'ENTC',
-            MECH: 'Mechanical',
-            OTHER: 'Other'
-        };
-
-        const branch_categories = central_object.formData.branchCategories
-            .map(el => branch_cat_obj[el] || el)
-            .join(", ");
+        
+        const branch_categories = central_object.formData.branchCategories.join(", ");
 
         // Add branch categories with text wrapping
         const wrappedBranchText = doc.splitTextToSize(`Branch Categories: ${branch_categories}`, 270);
@@ -799,23 +656,12 @@ async function saveGeneratePdf() {
         doc.text(wrappedBranchText, 14, currentY);
         currentY += wrappedBranchText.length * 6;
 
-        // Add selected branches if any
-        if (selectedBranches.length > 0) {
-            const selectedBranchesText = doc.splitTextToSize(`Selected Branches: ${selectedBranches.join(", ")}`, 270);
-            doc.text(selectedBranchesText, 14, currentY);
-            currentY += selectedBranchesText.length * 6;
-        }
-
         // Format city list
         const cityString = central_object.formData.city.includes("All") ? "All Regions" : central_object.formData.city.join(", ");
         const wrappedCityText = doc.splitTextToSize(`Cities: ${cityString}`, 270);
         doc.text(wrappedCityText, 14, currentY);
         currentY += wrappedCityText.length * 6;
 
-        // TFWS status
-        const tfwsText = central_object.formData.tfws ? 'TFWS: Yes' : 'TFWS: No';
-        doc.text(tfwsText, 14, currentY);
-        currentY += 10;
 
         // Prepare table data
         let headData = ['No.', 'Choice Code', 'College Name', 'Branch', 'GOPEN'];
@@ -836,10 +682,7 @@ async function saveGeneratePdf() {
             }
         }
         
-        if(central_object.formData.tfws){
-            headData.push('TFWS');
-        }
-
+        
         let count = 1;
         const tableData = [];
         
@@ -870,9 +713,7 @@ async function saveGeneratePdf() {
                 }
             }
             
-            if(central_object.formData.tfws){
-                row.push(college.tfws);
-            }
+       
             
             tableData.push(row);
         });
@@ -924,7 +765,7 @@ async function saveGeneratePdf() {
         const pdfBlob = doc.output('blob');
         const formData = new FormData();
         formData.append('pdf', pdfBlob, 'preference_list.pdf');
-        formData.append('exam', 'Engineering');
+        formData.append('exam', 'Pharmacy');
 
         const response = await fetch('/savePdfroute/savePdf', {
             method: 'POST',
@@ -935,7 +776,7 @@ async function saveGeneratePdf() {
             throw new Error('Failed to store PDF');
         }
 
-        doc.save('Engineering_Preference_List.pdf');
+        doc.save('Pharmacy_Preference_List.pdf');
 
         // function addWatermark(doc) {
         //     const pageWidth = doc.internal.pageSize.width;
@@ -997,22 +838,20 @@ async function generatePdf() {
         doc.text(`Caste: ${central_object.formData.caste}`, 14, 48);
 
         // Format branch category
-        const branch_cat_obj = {
-            All: 'All',
-            CIVIL: 'Civil',
-            COMP: 'Computer Science',
-            IT: 'Information Technology',
-            COMPAI: 'CSE (Artificial Intelligence)',
-            AI: 'Artificial Intelligence',
-            ELECTRICAL: 'Electrical',
-            ENTC: 'ENTC',
-            MECH: 'Mechanical',
-            OTHER: 'Other'
-        };
+        // const branch_cat_obj = {
+        //     All: 'All',
+        //     CIVIL: 'Civil',
+        //     COMP: 'Computer Science',
+        //     IT: 'Information Technology',
+        //     COMPAI: 'CSE (Artificial Intelligence)',
+        //     AI: 'Artificial Intelligence',
+        //     ELECTRICAL: 'Electrical',
+        //     ENTC: 'ENTC',
+        //     MECH: 'Mechanical',
+        //     OTHER: 'Other'
+        // };
 
-        const branch_categories = central_object.formData.branchCategories
-            .map(el => branch_cat_obj[el] || el)
-            .join(", ");
+        const branch_categories = central_object.formData.branchCategories.join(", ");
 
         // Add branch categories with text wrapping
         const wrappedBranchText = doc.splitTextToSize(`Branch Categories: ${branch_categories}`, 270);
@@ -1033,10 +872,10 @@ async function generatePdf() {
         doc.text(wrappedCityText, 14, currentY);
         currentY += wrappedCityText.length * 6;
 
-        // TFWS status
-        const tfwsText = central_object.formData.tfws ? 'TFWS: Yes' : 'TFWS: No';
-        doc.text(tfwsText, 14, currentY);
-        currentY += 10;
+        // // TFWS status
+        // const tfwsText = central_object.formData.tfws ? 'TFWS: Yes' : 'TFWS: No';
+        // doc.text(tfwsText, 14, currentY);
+        // currentY += 10;
 
         // Prepare table data
         let headData = ['No.', 'Choice Code', 'College Name', 'Branch', 'GOPEN'];
@@ -1057,9 +896,9 @@ async function generatePdf() {
             }
         }
         
-        if(central_object.formData.tfws){
-            headData.push('TFWS');
-        }
+        // if(central_object.formData.tfws){
+        //     headData.push('TFWS');
+        // }
 
         let count = 1;
         const tableData = [];
@@ -1142,7 +981,7 @@ async function generatePdf() {
             }
         });
 
-        doc.save('Engineering_Preference_List.pdf');
+        doc.save('Pharmacy_Preference_List.pdf');
 
         
     } catch (error) {

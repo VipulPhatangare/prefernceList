@@ -3,9 +3,6 @@ const app = express();
 require('dotenv').config();
 const path = require("path");
 
-require('dotenv').config();
-const Razorpay = require("razorpay");
-const crypto = require("crypto");
 const ExcelJS = require('exceljs');
 
 
@@ -15,10 +12,6 @@ const {Pdf, Payment} = require('./database/schema');
 connectDB();
 
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
 
 const session = require('express-session');
 
@@ -40,13 +33,20 @@ app.get("/", (req, res) => {
   res.render("payementPage");
 });
 
+const pharmacyCollegeListRoutes = require('./routes/pharmacyCollegeListroute'); 
+app.use('/pharmacyCollegeList', pharmacyCollegeListRoutes);
+
+// const dseCollegeListRoutes = require('./routes/dseCollegeListroute'); 
+// app.use('/dseCollegeList',dseCollegeListRoutes);
+
 const engineeringCollegeListRoutes = require('./routes/engineeringCollegeListroute'); 
 app.use('/engineeringCollegeList',engineeringCollegeListRoutes);
 
-// savePdf
-
 const savePdfRoutes = require('./routes/savePdfroute'); 
 app.use('/savePdfroute',savePdfRoutes);
+
+const paymentRoutes = require('./routes/paymentroute'); 
+app.use('/payment',paymentRoutes);
 
 
 app.get('/download-payments-excel', async (req, res) => {
@@ -118,7 +118,6 @@ app.get('/download-payments-excel', async (req, res) => {
   }
 });
 
-
 app.post('/saveStudentIfo', async (req, res) => {
     try {
         const userPaymentInfo = req.body;
@@ -136,7 +135,6 @@ app.post('/saveStudentIfo', async (req, res) => {
         });
     }
 });
-
 
 app.get('/download/pdf/:id', async (req, res) => {
     try {
@@ -156,81 +154,6 @@ app.get('/download/pdf/:id', async (req, res) => {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
-});
-
-
-app.get("/api/payment/create-order", async (req, res) => {
-    
-    console.log(req.session.userPaymentInfo);
-    const amount = req.session.userPaymentInfo.amount;
-    const finalAmount = (amount * 1.21).toFixed(2);
-    const options = {
-        amount: finalAmount * 100, // amount in paise
-        currency: "INR",
-        receipt: "order_rcptid_" + Math.random().toString(36).substring(2, 15),
-    };
-    try {
-        const order = await razorpay.orders.create(options);
-        res.json(order);
-    } catch (err) {
-        res.status(500).send("Error creating order");
-    }
-});
-
-app.post("/api/payment/verify", (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-    req.body;
-  const key_secret = process.env.RAZORPAY_KEY_SECRET;
-
-  // Generate expected signature
-  const hmac = crypto.createHmac("sha256", key_secret);
-  hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
-  const generated_signature = hmac.digest("hex");
-
-  if (generated_signature === razorpay_signature) {
-    // Payment is verified
-    res.json({ success: true });
-  } else {
-    // Verification failed
-    res.json({ success: false });
-  }
-});
-
-app.post("/api/payment/store", async (req, res) => {
-  const { name, email, phone, razorpay_payment_id, razorpay_order_id, plan } = req.body;
-  let count = 0;
-  if (plan === "Standard Package") count = 150;
-  else if (plan === "Premium Package") count = 300;
-//   else if (plan === "Premium") count = 150;
-
-  try {
-    const payment = new Payment({
-      name,
-      email,
-      phone,
-      razorpay_payment_id,
-      razorpay_order_id,
-      plan,
-    });
-    await payment.save();
-    // Store count and email in session
-    req.session.count = count;
-    req.session.email = email;
-    res.json({
-      success: true,
-      count,
-      name,
-      email,
-      phone,
-      razorpay_payment_id,
-      razorpay_order_id,
-      plan,
-    });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to store payment info" });
-  }
 });
 
 app.listen(port || 3000, () => {
