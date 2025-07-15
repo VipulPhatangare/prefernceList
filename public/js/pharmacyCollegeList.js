@@ -296,7 +296,7 @@ async function handleFormSubmit(e) {
     const regions = Array.from(regionCheckboxes).map(cb => cb.value);
     
     const formData = {
-        generalRank: parseInt(document.getElementById('generalRank').value),
+        generalRank: document.getElementById('generalRank').value,
         caste: casteSelect.value,
         gender: document.querySelector('input[name="gender"]:checked').value,
         tfws: tfwsCheckbox.checked,
