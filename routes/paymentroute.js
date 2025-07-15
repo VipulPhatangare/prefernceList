@@ -49,7 +49,10 @@ router.post("/api/payment/verify", (req, res) => {
 
 router.post("/api/payment/store", async (req, res) => {
     const { name, email, phone, razorpay_payment_id, razorpay_order_id, plan, formData } = req.body;
-    
+    let count = 0;
+    if (plan === "Standard Package") count = 150;
+    else if (plan === "Premium Package") count = 300;
+    //   else if (plan === "Premium") count = 150;
 
     try {
         const payment = new Payment({
@@ -62,7 +65,8 @@ router.post("/api/payment/store", async (req, res) => {
             formData
         });
         await payment.save();
-        
+        // Store count and email in session
+            req.session.count = count;
             req.session.email = email;
             req.session.paymentID = payment._id.toString();
         res.json({
