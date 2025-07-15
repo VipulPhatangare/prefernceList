@@ -1206,14 +1206,16 @@ router.post('/College_list', async (req, res) => {
         }
 
         let colleges = await getColleges(formData);
+        // console.log(colleges);
         let college_counts;
         let count = req.session.userPaymentInfo.amount;
+        // console.log(count);
         if(count == 499){
-            college_counts = 150;
+            college_counts = 200;
         }else if(count == 999){
             college_counts = 300;
-        }else if(count == 199){
-            college_counts = 75;
+        }else if(count == 249){
+            college_counts = 100;
         }else{
             return res.send('Do not change the college count using url. Hahahaa.');
         }

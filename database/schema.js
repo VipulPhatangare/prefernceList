@@ -14,6 +14,8 @@ const paymentSchema = new mongoose.Schema({
   razorpay_payment_id: String,
   razorpay_order_id: String,
   plan: String,
+  formData: mongoose.Schema.Types.Mixed,
+  pdfLink:String,
   createdAt: { type: Date, default: Date.now },
 });
 

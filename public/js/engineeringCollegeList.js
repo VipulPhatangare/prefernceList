@@ -448,7 +448,8 @@ async function processPayment() {
                         phone: userPaymentInfo.phone,
                         plan: userPaymentInfo.plan,
                         razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_order_id: response.razorpay_order_id
+                        razorpay_order_id: response.razorpay_order_id,
+                        formData :central_object.formData
                     };
                     
                     const storeRes = await fetch('/payment/api/payment/store', {

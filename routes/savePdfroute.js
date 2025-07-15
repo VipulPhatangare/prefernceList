@@ -98,9 +98,19 @@ router.post('/savePdf', upload.single('pdf'), async (req, res) => {
         });
 
         await newPreferenceList.save();
-
         const pdfID = newPreferenceList._id.toString();
         const listLink = `https://list.campusdekho.ai/download/pdf/${pdfID}`;
+        const paymentID = req.session.paymentID;
+        const updateResult = await Payment.findByIdAndUpdate(
+            paymentID, // <-- must be provided in session
+            { pdfLink: listLink },
+            { new: true }
+        );
+
+        if (!updateResult) {
+            console.warn(`Payment document not found for _id: ${_id}`);
+        }
+        
         // console.log(listLink);
         await sendCollegePreferenceList(phone, name, listLink);
 
