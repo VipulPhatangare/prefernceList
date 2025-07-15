@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #0067A5;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Login Form Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-form {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #00508c;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dashboard-header h1 {
+            color: var(--primary-color);
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .data-table-container {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .data-table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .data-table-header h2 {
+            color: var(--primary-color);
+        }
+
+        .download-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .download-btn:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background-color: #00508c;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-color);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary-color);
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: var(--dark-color);
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+
+            .detail-row {
+                flex-direction: column;
+            }
+
+            .detail-label {
+                margin-bottom: 0.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div id="loginSection" class="login-container">
+        <div class="login-form">
+            <h2>Admin Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" id="phoneNumber" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="container" style="display: none;">
+        <div class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>Total Records</h3>
+                <p id="totalRecords">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Basic Package</h3>
+                <p id="planACount">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Standard Package</h3>
+                <p id="planBCount">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Premium Package</h3>
+                <p id="planCCount">0</p>
+            </div>
+        </div>
+
+        <div class="data-table-container">
+            <div class="data-table-header">
+                <h2>Payment Records</h2>
+                <button id="downloadExcelBtn" class="download-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                    </svg>
+                    Download Excel
+                </button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Payment ID</th>
+                            <th>Plan</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Student Details</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div id="modalBody">
+                <!-- Details will be inserted here by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button id="downloadPdfBtn" class="download-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                    </svg>
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Static credentials
+        const STATIC_PHONE = "8999741641";
+        const STATIC_PASSWORD = "123456";
+
+        let sampleData = [];
+
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const dashboardSection = document.getElementById('dashboardSection');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const downloadExcelBtn = document.getElementById('downloadExcelBtn');
+        const tableBody = document.getElementById('tableBody');
+        const notification = document.getElementById('notification');
+        const totalRecordsEl = document.getElementById('totalRecords');
+        const planACountEl = document.getElementById('planACount');
+        const planBCountEl = document.getElementById('planBCount');
+        const planCCountEl = document.getElementById('planCCount');
+        const detailModal = document.getElementById('detailModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalBody = document.getElementById('modalBody');
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+
+        // Current selected student for modal
+        let currentStudent = null;
+
+        // Event Listeners
+        loginForm.addEventListener('submit', handleLogin);
+        logoutBtn.addEventListener('click', handleLogout);
+        downloadExcelBtn.addEventListener('click', downloadExcel);
+        closeModalBtn.addEventListener('click', closeModal);
+        downloadPdfBtn.addEventListener('click', downloadPdf);
+
+        // Close modal when clicking outside
+        detailModal.addEventListener('click', (e) => {
+            if (e.target === detailModal) {
+                closeModal();
+            }
+        });
+
+        // Functions
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const password = document.getElementById('password').value;
+            
+            if (phoneNumber === STATIC_PHONE && password === STATIC_PASSWORD) {
+                showNotification('Login successful!', 'success');
+                loginSection.style.display = 'none';
+                dashboardSection.style.display = 'block';
+                loadDashboardData();
+            } else {
+                showNotification('Invalid credentials!', 'error');
+            }
+        }
+
+        function handleLogout() {
+            loginSection.style.display = 'flex';
+            dashboardSection.style.display = 'none';
+            document.getElementById('phoneNumber').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        async function loadDashboardData() {
+            
+            const response = await fetch('/dashboard/data');
+            sampleData = await response.json();
+            
+            // Update stats
+            totalRecordsEl.textContent = sampleData.length;
+            planACountEl.textContent = sampleData.filter(item => item.plan === 'Basic Package').length;
+            planBCountEl.textContent = sampleData.filter(item => item.plan === 'Standard Package').length;
+            planCCountEl.textContent = sampleData.filter(item => item.plan === 'Premium Package').length;
+            console.log(sampleData);
+            // Populate table
+            tableBody.innerHTML = '';
+            sampleData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                const date = new Date(item.createdAt).toLocaleString();
+                
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.email}</td>
+                    <td>${item.phone}</td>
+                    <td>${item.razorpay_payment_id}</td>
+                    <td>${item.plan}</td>
+                    <td>${date}</td>
+                    <td>
+                        <button class="action-btn view-details-btn" data-index="${index}">View Details</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+
+            // Add event listeners to view buttons
+            document.querySelectorAll('.view-details-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = e.target.getAttribute('data-index');
+                    showStudentDetails(index);
+                });
+            });
+        }
+
+        function showStudentDetails(index) {
+            currentStudent = sampleData[index];
+            console.log(sampleData[index]);
+            // Format the form data for display
+            const formData = currentStudent.formData || {};
+            const tfwsStatus = formData.tfws ? 'Yes' : 'No';
+            const branchCategories = Array.isArray(formData.branchCategories) ? formData.branchCategories.join(', ') : '';
+            const cities = Array.isArray(formData.city) ? formData.city.join(', ') : '';
+            const selectedBranches = Array.isArray(formData.selected_branches) ? formData.selected_branches.join(', ') : '';
+            
+            // Create modal content
+            modalBody.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Name:</div>
+                    <div class="detail-value">${currentStudent.name}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Email:</div>
+                    <div class="detail-value">${currentStudent.email}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Phone:</div>
+                    <div class="detail-value">${currentStudent.phone}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Payment ID:</div>
+                    <div class="detail-value">${currentStudent.razorpay_payment_id}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Plan:</div>
+                    <div class="detail-value">${currentStudent.plan}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Date:</div>
+                    <div class="detail-value">${new Date(currentStudent.createdAt).toLocaleString()}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Percentile:</div>
+                    <div class="detail-value">${formData.generalRank || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Gender:</div>
+                    <div class="detail-value">${formData.gender}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Caste:</div>
+                    <div class="detail-value">${formData.caste || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">TFWS:</div>
+                    <div class="detail-value">${tfwsStatus}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Home University:</div>
+                    <div class="detail-value">${formData.homeuniversity || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">City:</div>
+                    <div class="detail-value">${cities || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Branch Categories:</div>
+                    <div class="detail-value">${branchCategories || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Selected Branches:</div>
+                    <div class="detail-value">${selectedBranches || 'N/A'}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">PDF Link:</div>
+                    <div class="detail-value">${currentStudent.pdfLink? `<a href="${currentStudent.pdfLink}" target="_blank">${currentStudent.pdfLink}</a>` : 'N/A'}</div>
+                </div>
+            `;
+            
+            // Show the modal
+            detailModal.classList.add('active');
+        }
+
+        function closeModal() {
+            detailModal.classList.remove('active');
+            currentStudent = null;
+        }
+
+        function downloadPdf() {
+            if (currentStudent && currentStudent.pdfLink) {
+                // In a real app, you might want to trigger a download
+                // For this example, we'll just open the link in a new tab
+                window.open(currentStudent.pdfLink, '_blank');
+                showNotification('PDF download started!', 'success');
+            } else {
+                showNotification('No PDF available for this student', 'error');
+            }
+        }
+
+        function downloadExcel() {
+            showNotification('Preparing Excel file for download...', 'success');
+            
+            // In a real app, this would call your API endpoint
+            // For this example, we'll simulate a download
+            setTimeout(() => {
+                // Create a dummy download link
+                const link = document.createElement('a');
+                link.href = '#'; // In a real app, this would be the URL to your API endpoint
+                link.download = 'payments-export.xlsx';
+                link.click();
+                
+                showNotification('Excel file downloaded successfully!', 'success');
+            }, 1500);
+        }
+
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+
+
