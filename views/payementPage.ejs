@@ -587,7 +587,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone Number (WhatsApp)</label>
-                            <input type="tel" class="form-control" id="phone" required>
+                            <input type="tel" class="form-control" id="phone" minlength="10" maxlength="10">
                         </div>
                         <div class="note-box p-3 mb-3">
                             <strong>Note:</strong> Please fill carefully all information and provide a WhatsApp number. The preference list will be sent to you via WhatsApp.
@@ -659,7 +659,13 @@
         let userPaymentInfo = {};
         document.getElementById('planForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+            // const phoneInput = document.getElementById('phone');
+            // if (phoneInput.value.length !== 10) {
+            //     e.preventDefault();
+            //     // alert('Please enter a valid 10-digit phone number');
+            //     phoneInput.focus();
+            // }
+                    
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
