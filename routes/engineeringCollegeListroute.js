@@ -134,65 +134,7 @@ async function getSelectedBranchCode(selected_branches) {
     }
 }
 
-function calculateRankRange(formData, amount) {
 
-    let subMinRank = 0;
-    let minRank = formData.generalRank;
-    
-    if(amount == 249){
-        if (formData.generalRank < 5000) {
-            minRank = 0;
-        }else if(formData.generalRank < 20000){
-            subMinRank = 6000;
-        }else if(formData.generalRank < 30000){
-            subMinRank = 6000;
-        }else if(formData.generalRank < 40000){
-            subMinRank = 6000;
-        }else if(formData.generalRank < 50000){
-            subMinRank = 6000;
-        }else if(formData.generalRank < 60000){
-            subMinRank = 7000;
-        }else if(formData.generalRank < 70000){
-            subMinRank = 7000;
-        }else if(formData.generalRank < 80000){
-            subMinRank = 7000;
-        }else if(formData.generalRank < 90000){
-            subMinRank = 8000;
-        }else if(formData.generalRank < 100000){
-            subMinRank = 8000;
-        }else {
-            subMinRank = 10000;
-        }
-    }else{
-        if (formData.generalRank < 8000) {
-            minRank = 0;
-        }else if(formData.generalRank < 20000){
-            subMinRank = 10000;
-        }else if(formData.generalRank < 30000){
-            subMinRank = 11000;
-        }else if(formData.generalRank < 40000){
-            subMinRank = 13000;
-        }else if(formData.generalRank < 50000){
-            subMinRank = 15000;
-        }else if(formData.generalRank < 60000){
-            subMinRank = 17000;
-        }else if(formData.generalRank < 70000){
-            subMinRank = 19000;
-        }else if(formData.generalRank < 80000){
-            subMinRank = 20000;
-        }else if(formData.generalRank < 90000){
-            subMinRank = 21000;
-        }else if(formData.generalRank < 100000){
-            subMinRank = 22000;
-        }else {
-            subMinRank = 24000;
-        }
-    }
-
-    minRank -= subMinRank;
-    new_data_of_student.minRank = minRank;
-    new_data_of_student.maxRank = 2000000; 
-}
 
 function clear_new_data_function() {
     new_data_of_student.caste_name = '';
@@ -1100,7 +1042,7 @@ async function getColleges(formData) {
 
     try {
         // First query
-        const { data: mhtData, error: mhtError } = await supabase.rpc('pcm_preference_list_mht', {
+        const { data: mhtData, error: mhtError } = await supabase.rpc('pcm_preference_list_mht_1', {
             homeuniversity: formData.homeuniversity,
             minrank: new_data_of_student.minRank,
             maxrank: new_data_of_student.maxRank,
@@ -1185,12 +1127,125 @@ function college_filter(colleges, formData) {
     return college_list;
 }
 
+function calculateRankRange(formData, amount) {
+
+    let subMinRank = 0;
+    let minRank = formData.generalRank;
+    
+    if(amount == 249){
+        if (formData.generalRank < 5000) {
+            minRank = 0;
+        }else if(formData.generalRank < 20000){
+            subMinRank = 6000;
+        }else if(formData.generalRank < 30000){
+            subMinRank = 6000;
+        }else if(formData.generalRank < 40000){
+            subMinRank = 6000;
+        }else if(formData.generalRank < 50000){
+            subMinRank = 6000;
+        }else if(formData.generalRank < 60000){
+            subMinRank = 7000;
+        }else if(formData.generalRank < 70000){
+            subMinRank = 7000;
+        }else if(formData.generalRank < 80000){
+            subMinRank = 7000;
+        }else if(formData.generalRank < 90000){
+            subMinRank = 8000;
+        }else if(formData.generalRank < 100000){
+            subMinRank = 8000;
+        }else {
+            subMinRank = 10000;
+        }
+    }else{
+        if (formData.generalRank < 8000) {
+            minRank = 0;
+        }else if(formData.generalRank < 20000){
+            subMinRank = 10000;
+        }else if(formData.generalRank < 30000){
+            subMinRank = 11000;
+        }else if(formData.generalRank < 40000){
+            subMinRank = 13000;
+        }else if(formData.generalRank < 50000){
+            subMinRank = 15000;
+        }else if(formData.generalRank < 60000){
+            subMinRank = 17000;
+        }else if(formData.generalRank < 70000){
+            subMinRank = 19000;
+        }else if(formData.generalRank < 80000){
+            subMinRank = 20000;
+        }else if(formData.generalRank < 90000){
+            subMinRank = 21000;
+        }else if(formData.generalRank < 100000){
+            subMinRank = 22000;
+        }else {
+            subMinRank = 24000;
+        }
+    }
+
+    minRank -= subMinRank;
+    new_data_of_student.minRank = minRank;
+    new_data_of_student.maxRank = 2000000; 
+}
+
+// router.post('/College_list', async (req, res) => {
+//     const formData = req.body;
+//     console.log(formData);
+//     // console.log(req.session.userPaymentInfo)
+//     let amount = req.session.userPaymentInfo.amount;
+//     // console.log(amount)
+//     clear_new_data_function();
+
+//     try {
+
+//         central_object.percentile = formData.generalRank;
+
+//         formData.generalRank = await getRankFromPercentile(formData.generalRank);
+//         // console.log(formData);
+
+//         if(central_object.percentile < 80 && formData.branchCategories[0] != 'All'){
+//             formData.branchCategories.push('COMP');
+//             formData.branchCategories.push('COMPAI');
+//         }
+
+//         new_data_of_student.selected_branches_code = await getSelectedBranchCode(formData.selected_branches);
+//         calculateRankRange(formData, amount);
+
+//         getCasteColumns(formData.caste, formData.gender);
+//         if (formData.specialReservation != 'No') {
+//             new_data_of_student.specialReservation = formData.specialReservation;
+//         }
+
+//         let colleges = await getColleges(formData);
+//         // console.log(colleges);
+//         let college_counts;
+//         let count = req.session.userPaymentInfo.amount;
+//         // console.log(count);
+//         if(count == 499){
+//             college_counts = 200;
+//         }else if(count == 999){
+//             college_counts = 300;
+//         }else if(count == 249){
+//             college_counts = 100;
+//         }else{
+//             return res.send('Do not change the college count using url. Hahahaa.');
+//         }
+
+//         colleges = colleges.slice(0,college_counts);
+//         // console.log(colleges);
+//         res.json(colleges);
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ error: 'Failed to fetch colleges' });
+//     }
+
+// });
+
 router.post('/College_list', async (req, res) => {
     const formData = req.body;
     // console.log(formData);
-    console.log(req.session.userPaymentInfo)
-    let amount = req.session.userPaymentInfo.amount;
-    console.log(amount)
+    // console.log(req.session.userPaymentInfo)
+    // let amount = req.session.userPaymentInfo.amount;
+    // console.log(amount)
     clear_new_data_function();
 
     try {
@@ -1206,18 +1261,31 @@ router.post('/College_list', async (req, res) => {
         }
 
         new_data_of_student.selected_branches_code = await getSelectedBranchCode(formData.selected_branches);
-        calculateRankRange(formData, amount);
+        // calculateRankRange(formData, amount);
 
         getCasteColumns(formData.caste, formData.gender);
         if (formData.specialReservation != 'No') {
             new_data_of_student.specialReservation = formData.specialReservation;
         }
 
-        let colleges = await getColleges(formData);
+        new_data_of_student.minRank = 0;
+        new_data_of_student.maxRank = formData.generalRank; 
+
+        let colleges_1 = await getColleges(formData);
+        colleges_1.sort((a, b) => a.choice_points - b.choice_points);
         // console.log(colleges);
+
+        new_data_of_student.minRank = formData.generalRank;
+        new_data_of_student.maxRank = 200000; 
+
+        let colleges_2 = await getColleges(formData);
+        colleges_2.sort((a, b) => b.choice_points - a.choice_points);
+
         let college_counts;
+        
         let count = req.session.userPaymentInfo.amount;
         // console.log(count);
+        
         if(count == 499){
             college_counts = 200;
         }else if(count == 999){
@@ -1227,8 +1295,27 @@ router.post('/College_list', async (req, res) => {
         }else{
             return res.send('Do not change the college count using url. Hahahaa.');
         }
+        
+        let college_counts_2;
+        let college_counts_1;
+        if(colleges_1.length < (college_counts / 2) && colleges_2.length > (college_counts / 2)){
+            college_counts_2 = college_counts - colleges_1.length;
+            colleges_2 = colleges_2.slice(0,college_counts_2);
+        }else if(colleges_1.length > (college_counts / 2) && colleges_2.length < (college_counts / 2)){
+            college_counts_1 = college_counts - colleges_2.length;
+            colleges_1 = colleges_1.slice(0,college_counts_1);
+        }else if(colleges_1.length < (college_counts / 2) && colleges_2.length < (college_counts / 2)){
+            colleges_2 = colleges_2;
+            colleges_1 = colleges_1;
+        }else{
+            college_counts /= 2;
+            colleges_2 = colleges_2.slice(0,college_counts);
+            colleges_1 = colleges_1.slice(0,college_counts);
+        }
 
-        colleges = colleges.slice(0,college_counts);
+        
+        let colleges = [...colleges_1, ...colleges_2];
+        colleges.sort((a, b) => b.choice_points - a.choice_points);
         // console.log(colleges);
         res.json(colleges);
     } catch (error) {
@@ -1237,6 +1324,5 @@ router.post('/College_list', async (req, res) => {
     }
 
 });
-
 
 module.exports = router;
