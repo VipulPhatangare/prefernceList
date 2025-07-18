@@ -45,12 +45,24 @@ downloadPdfBtn.addEventListener('click', generatePdf);
 document.addEventListener("DOMContentLoaded", initialize);
 
 async function initialize() {
+    await razorpay();
     await fetchBranches();
     await fetchCity();
     await fetchUniversity();
     initBranchSelection();
+    
 }
 
+async function razorpay() {
+    try {
+        const response = await fetch('/engineeringCollegeList/razorPay');
+        const data = await response.json();
+        central_object.razorpayKeyId = data.razorpayKeyId;
+        central_object.PaymentPrice = data.amount;
+    } catch (error) {
+        console.log(error);
+    }
+}
 // Branch Category Checkbox Functions
 function initBranchSelection() {
     const checkboxes = document.querySelectorAll('.branch-checkbox');
@@ -384,7 +396,8 @@ async function handleFormSubmit(e) {
 
     try {
         // Show payment confirmation modal
-        showPaymentModal(PaymentPrice, async (confirmed) => {
+        // const PaymentPrice = sessionStorage.getItem("PaymentPrice");
+        showPaymentModal(central_object.PaymentPrice, async (confirmed) => {
             if (confirmed) {
                 const paymentSuccess = await processPayment();
                 
@@ -432,10 +445,11 @@ async function processPayment() {
         if (!response.ok) throw new Error('Failed to create payment order');
         
         const order = await response.json();
-        
+        // const razorpayKeyId = sessionStorage.getItem("razorpayKeyId ");
+
         return new Promise((resolve) => {
             const options = {
-                key: razorpayKeyId,
+                key: central_object.razorpayKeyId,
                 amount: order.amount,
                 currency: order.currency,
                 name: "CampusDekho",

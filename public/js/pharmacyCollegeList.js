@@ -45,10 +45,21 @@ downloadPdfBtn.addEventListener('click', generatePdf);
 document.addEventListener("DOMContentLoaded", initialize);
 
 async function initialize() {
-    
+    await razorpay();
     await fetchCity();
     await fetchUniversity();
     initBranchSelection();
+}
+
+async function razorpay() {
+    try {
+        const response = await fetch('/engineeringCollegeList/razorPay');
+        const data = await response.json();
+        central_object.razorpayKeyId = data.razorpayKeyId;
+        central_object.PaymentPrice = data.amount;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // Branch Category Checkbox Functions
@@ -324,7 +335,7 @@ async function handleFormSubmit(e) {
 
     try {
         // Show payment confirmation modal
-        showPaymentModal(PaymentPrice, async (confirmed) => {
+        showPaymentModal(central_object.PaymentPrice, async (confirmed) => {
             if (confirmed) {
                 const paymentSuccess = await processPayment();
                 
@@ -373,7 +384,7 @@ async function processPayment() {
         
         return new Promise((resolve) => {
             const options = {
-                key: razorpayKeyId,
+                key: central_object.razorpayKeyId,
                 amount: order.amount,
                 currency: order.currency,
                 name: "CampusDekho",

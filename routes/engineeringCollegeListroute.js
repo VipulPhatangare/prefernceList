@@ -11,8 +11,9 @@ const central_object = {
 router.get('/', async (req, res) => {
 
     // console.log(req.session.userPaymentInfo);
+    // { razorpayKeyId: process.env.RAZORPAY_KEY_ID , price: }
     if(req.session.userPaymentInfo){
-        res.render('engineeringCollegeList', { razorpayKeyId: process.env.RAZORPAY_KEY_ID , price: req.session.userPaymentInfo.amount});
+        res.render('engineeringCollegeList');
     }else{
         res.redirect('/');
     }
@@ -21,6 +22,13 @@ router.get('/', async (req, res) => {
 router.get('/takePaymentInfo',(req, res)=>{
     const userPaymentInfo = req.session.userPaymentInfo;
     res.json(userPaymentInfo);
+});
+
+
+router.get('/razorPay',(req, res)=>{
+    const amount = req.session.userPaymentInfo.amount;
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
+    res.json({amount, razorpayKeyId});
 });
 
 router.get('/fetchBranches', async (req, res) => {
