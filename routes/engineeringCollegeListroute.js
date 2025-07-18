@@ -1187,59 +1187,6 @@ function calculateRankRange(formData, amount) {
     new_data_of_student.maxRank = 2000000; 
 }
 
-// router.post('/College_list', async (req, res) => {
-//     const formData = req.body;
-//     console.log(formData);
-//     // console.log(req.session.userPaymentInfo)
-//     let amount = req.session.userPaymentInfo.amount;
-//     // console.log(amount)
-//     clear_new_data_function();
-
-//     try {
-
-//         central_object.percentile = formData.generalRank;
-
-//         formData.generalRank = await getRankFromPercentile(formData.generalRank);
-//         // console.log(formData);
-
-//         if(central_object.percentile < 80 && formData.branchCategories[0] != 'All'){
-//             formData.branchCategories.push('COMP');
-//             formData.branchCategories.push('COMPAI');
-//         }
-
-//         new_data_of_student.selected_branches_code = await getSelectedBranchCode(formData.selected_branches);
-//         calculateRankRange(formData, amount);
-
-//         getCasteColumns(formData.caste, formData.gender);
-//         if (formData.specialReservation != 'No') {
-//             new_data_of_student.specialReservation = formData.specialReservation;
-//         }
-
-//         let colleges = await getColleges(formData);
-//         // console.log(colleges);
-//         let college_counts;
-//         let count = req.session.userPaymentInfo.amount;
-//         // console.log(count);
-//         if(count == 499){
-//             college_counts = 200;
-//         }else if(count == 999){
-//             college_counts = 300;
-//         }else if(count == 249){
-//             college_counts = 100;
-//         }else{
-//             return res.send('Do not change the college count using url. Hahahaa.');
-//         }
-
-//         colleges = colleges.slice(0,college_counts);
-//         // console.log(colleges);
-//         res.json(colleges);
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ error: 'Failed to fetch colleges' });
-//     }
-
-// });
-
 router.post('/College_list', async (req, res) => {
     const formData = req.body;
     // console.log(formData);

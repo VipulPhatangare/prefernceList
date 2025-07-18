@@ -1041,12 +1041,44 @@ router.post('/College_list', async(req,res)=>{
         
         const rank = await getRankFromPercentile(formData.generalRank);
         // console.log(rank);
-        calculateRankRange(rank);
+        // calculateRankRange(rank);
         
         getCasteColumns(formData.caste, formData.gender);
-       
-        // console.log(new_data_of_student);
-        let colleges = await getColleges(formData);
+        
+        new_data_of_student.minRank = 0;
+        new_data_of_student.maxRank = formData.generalRank;
+
+        let colleges_1 = await getColleges(formData);
+        colleges_1.sort((a, b) => a.choice_points - b.choice_points);
+
+        new_data_of_student.minRank = formData.generalRank;
+        new_data_of_student.maxRank = 200000;
+
+        let colleges_2 = await getColleges(formData);
+        colleges_2.sort((a, b) => a.choice_points - b.choice_points);
+
+
+        let college_counts = 200;
+        let college_counts_2;
+        let college_counts_1;
+        if(colleges_1.length < (college_counts / 2) && colleges_2.length > (college_counts / 2)){
+            college_counts_2 = college_counts - colleges_1.length;
+            colleges_2 = colleges_2.slice(0,college_counts_2);
+        }else if(colleges_1.length > (college_counts / 2) && colleges_2.length < (college_counts / 2)){
+            college_counts_1 = college_counts - colleges_2.length;
+            colleges_1 = colleges_1.slice(0,college_counts_1);
+        }else if(colleges_1.length < (college_counts / 2) && colleges_2.length < (college_counts / 2)){
+            colleges_2 = colleges_2;
+            colleges_1 = colleges_1;
+        }else{
+            college_counts /= 2;
+            colleges_2 = colleges_2.slice(0,college_counts);
+            colleges_1 = colleges_1.slice(0,college_counts);
+        }
+
+        
+        let colleges = [...colleges_1, ...colleges_2];
+        colleges.sort((a, b) => b.choice_points - a.choice_points); 
         // console.log(colleges);
         // let amount = req.session.userPaymentInfo.amount;
             
@@ -1057,8 +1089,8 @@ router.post('/College_list', async(req,res)=>{
         //     colleges = colleges.slice(0, 150);
         //     colleges.sort((a, b) => b.choice_points - a.choice_points);
         // }
-        colleges = colleges.slice(0, 200);
-        colleges.sort((a, b) => b.choice_points - a.choice_points);
+        // colleges = colleges.slice(0, 200);
+        // colleges.sort((a, b) => b.choice_points - a.choice_points);
         res.json(colleges);
 
     } catch (error) {
