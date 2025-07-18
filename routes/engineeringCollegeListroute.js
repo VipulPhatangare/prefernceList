@@ -159,25 +159,25 @@ function calculateRankRange(formData, amount) {
         if (formData.generalRank < 8000) {
             minRank = 0;
         }else if(formData.generalRank < 20000){
-            subMinRank = 8000;
-        }else if(formData.generalRank < 30000){
-            subMinRank = 9000;
-        }else if(formData.generalRank < 40000){
             subMinRank = 10000;
-        }else if(formData.generalRank < 50000){
+        }else if(formData.generalRank < 30000){
             subMinRank = 11000;
-        }else if(formData.generalRank < 60000){
-            subMinRank = 12000;
-        }else if(formData.generalRank < 70000){
+        }else if(formData.generalRank < 40000){
             subMinRank = 13000;
-        }else if(formData.generalRank < 80000){
-            subMinRank = 14000;
-        }else if(formData.generalRank < 90000){
+        }else if(formData.generalRank < 50000){
             subMinRank = 15000;
+        }else if(formData.generalRank < 60000){
+            subMinRank = 17000;
+        }else if(formData.generalRank < 70000){
+            subMinRank = 19000;
+        }else if(formData.generalRank < 80000){
+            subMinRank = 20000;
+        }else if(formData.generalRank < 90000){
+            subMinRank = 21000;
         }else if(formData.generalRank < 100000){
-            subMinRank = 16000;
+            subMinRank = 22000;
         }else {
-            subMinRank = 18000;
+            subMinRank = 24000;
         }
     }
 

@@ -12,7 +12,7 @@ async function sendCollegePreferenceList(mobileNumber, name, listLink) {
     const templateName = "preference_list"; // Your template name approved in WATI
     // console.log(mobileNumber, name, listLink);
 
-    // mobileNumber = `91${mobileNumber}`;
+    mobileNumber = `91${mobileNumber}`;
     const CHANNEL_NUMBER = process.env.CHANNEL_NUMBER;
     const END_POINT = process.env.WATI_ENDPOINT;
     const ACCESS_TOKEN = process.env.WATI_ACCESS_TOKEN;
