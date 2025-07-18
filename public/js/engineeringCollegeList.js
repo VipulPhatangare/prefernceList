@@ -302,7 +302,7 @@ generalRankInput.addEventListener('change', checkRankAndShowPopup);
 function checkRankAndShowPopup() {
     const percentile = parseFloat(generalRankInput.value);
     
-    if (percentile <= 65 && !isNaN(percentile)) {
+    if (percentile <= 75 && !isNaN(percentile)) {
         rankWarningPopup.classList.add('active');
         isLowPercentile = true;
     } else {
