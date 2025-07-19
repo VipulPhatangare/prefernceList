@@ -46,7 +46,7 @@ router.get("/api/generalCollegeList/payment/create-order/", async (req, res) => 
 });
 
 router.post("/api/payment/verify", (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
     const key_secret = process.env.RAZORPAY_KEY_SECRET;
 
     // Generate expected signature

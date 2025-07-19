@@ -811,12 +811,12 @@
                                 <option value="OPEN">OPEN</option>
                                 <option value="OBC">OBC</option>
                                 <option value="SEBC">SEBC</option>
-                                <option value="SC">SC</option>
+                                <!-- <option value="SC">SC</option>
                                 <option value="ST">ST</option>
                                 <option value="EWS">EWS</option>
                                 <option value="NT1">NT1</option>
                                 <option value="NT2">NT2</option>
-                                <option value="NT3">NT3</option>
+                                <option value="NT3">NT3</option> -->
                             </select>
                         </div>
 
@@ -979,7 +979,7 @@
     <!-- Loading Spinner -->
     <div class="loading-container" id="loadingSpinner">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Generating PDF...</div>
+        <div class="loading-text">Downloading PDF...</div>
     </div>
 
     <!-- Bootstrap JS Bundle with Popper -->
@@ -989,6 +989,20 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const central_object = {};
+            async function razorpay() {
+                try {
+                    const response = await fetch('/engineeringCollegeList/razorPay');
+                    const data = await response.json();
+                    central_object.razorpayKeyId = data.razorpayKeyId;
+                    // central_object.PaymentPrice = data.amount;
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            const vipulPdfID = "687b52fe48e8e56cb37ce9ce";
+
             const step1 = document.getElementById('step1');
             const step2 = document.getElementById('step2');
             const nextBtn = document.getElementById('nextBtn');
@@ -1095,6 +1109,7 @@
                                 downloadPdfBtn.classList.remove('hidden');
                                 
                             }, 3000);
+                            await downloadPdf(central_object.pdfID);
                         }else{
                             console.log("error")
                         }
@@ -1103,9 +1118,83 @@
                 });
             });
 
+            function planFinder(){
+                
+                const generalList = {
+                    gopen: {
+                        "90-100": "687b4a2c394a14b67bcff8bb",
+                        "80-90": "687b4be8394a14b67bcff8c8",
+                        "65-80": "687b4edb394a14b67bcff8d7",
+                        "40-65": "687b52b7394a14b67bcff8e9",
+                        "01-40": "687b52ff394a14b67bcff8ed"
+                    },
+                    lopen: {
+                        "90-100": "687b4a93394a14b67bcff8be",
+                        "80-90": "687b4d29394a14b67bcff8cc",
+                        "65-80": "687b4f19394a14b67bcff8d9",
+                        "40-65": "687b53d3394a14b67bcff8ef",
+                        "01-40": "687b5403394a14b67bcff8f1"
+                    },
+                    gsebc: {
+                        "90-100": "687b4abc394a14b67bcff8c0",
+                        "80-90": "687b4dd1394a14b67bcff8cf",
+                        "65-80": "687b4fc4394a14b67bcff8df",
+                        "40-65": "687b548a394a14b67bcff8f3",
+                        "01-40": "687b5502394a14b67bcff8f5"
+                    },
+                    lsebc: {
+                        "90-100": "687b4b33394a14b67bcff8c2",
+                        "80-90": "687b4e31394a14b67bcff8d1",
+                        "65-80": "687b50cc394a14b67bcff8e1",
+                        "40-65": "687b5bf8394a14b67bcff900",
+                        "01-40": "687b56b1394a14b67bcff8f9"
+                    },
+                    gobc: {
+                        "90-100": "687b4b69394a14b67bcff8c4",
+                        "80-90": "687b4e6b394a14b67bcff8d3",
+                        "65-80": "687b4f4a394a14b67bcff8db",
+                        "40-65": "687b512b394a14b67bcff8e3",
+                        "01-40": "687b5280394a14b67bcff8e7"
+                    },
+                    lobc: {
+                        "90-100": "687b4ba6394a14b67bcff8c6",
+                        "80-90": "687b4e90394a14b67bcff8d5",
+                        "65-80": "687b4f80394a14b67bcff8dd",
+                        "40-65": "687b5bbe394a14b67bcff8fe",
+                        "01-40": "687b5b54394a14b67bcff8fc"
+                    }
+                };
+
+                    let pdfID = '';
+
+                    if(gender.value == 'Male'){
+                        if(category.value == 'OPEN'){
+                            pdfID = generalList.gopen[percentileRange.value]
+                        }else if(category.value == 'OBC'){
+                            pdfID = generalList.gobc[percentileRange.value]
+                        }else{
+                            pdfID = generalList.gsebc[percentileRange.value]
+                        }
+                    }else{
+                        if(category.value == 'OPEN'){
+                            pdfID = generalList.lopen[percentileRange.value]
+                        }else if(category.value == 'OBC'){
+                            pdfID = generalList.lobc[percentileRange.value]
+                        }else{
+                            pdfID = generalList.lsebc[percentileRange.value]
+                        }
+                    }
+                    return pdfID;
+            }
+
+            // central_object.razorpayKeyId = "rzp_test_skrfIDWTsr5fbo";
+            
+
             async function processPayment() {
                 try {
                     
+                    let pdf_id = planFinder(); 
+                    central_object.pdfID = pdf_id;
                     const response = await fetch('/payment/api/generalCollegeList/payment/create-order/');
                     if (!response.ok) throw new Error('Failed to create payment order');
                     
@@ -1114,7 +1203,7 @@
 
                     return new Promise((resolve) => {
                         const options = {
-                            key: "rzp_test_skrfIDWTsr5fbo",
+                            key: central_object.razorpayKeyId,
                             amount: order.amount,
                             currency: order.currency,
                             name: "CampusDekho",
@@ -1130,7 +1219,8 @@
                                     razorpay_order_id: response.razorpay_order_id,
                                     caste: category.value,
                                     gender: gender.value,
-                                    percentileRange: percentileRange.value
+                                    percentileRange: percentileRange.value,
+                                    pdf_id : pdf_id
                                 };
                                 
                                 const storeRes = await fetch('/genaralCollegeList/payment/store', {
@@ -1175,14 +1265,8 @@
                 }
             }
 
-            downloadPdfBtn.addEventListener('click', function() {
-                // In a real implementation, this would trigger the PDF download
-                alert('Your PDF is now downloading!');
-                
-                // Here you would typically:
-                // 1. Generate the PDF
-                // 2. Trigger the download
-                // 3. Send to WhatsApp
+            downloadPdfBtn.addEventListener('click',async function() {
+                await downloadPdf(central_object.pdfID);
             });
 
             function showPaymentModal(amount, callback) {
@@ -1249,6 +1333,40 @@
                     document.body.removeChild(modal);
                     callback(false);
                 });
+            }
+            
+            // 
+            async function downloadPdf(pdfId) {
+                
+                loadingSpinner.style.display = 'flex';
+                
+                // Fetch the PDF
+                fetch(`/genaralCollegeList/download-pdf/${pdfId}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to download PDF');
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Create a download link
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `college-list-${pdfId}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        
+                        // Clean up
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                        
+                        // Hide loading spinner
+                        loadingSpinner.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error downloading PDF:', error);
+                        // alert('Error downloading PDF. Please try again.');
+                        loadingSpinner.style.display = 'none';
+                    });
             }
         });
     </script>
