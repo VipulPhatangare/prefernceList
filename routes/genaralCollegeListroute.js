@@ -50,13 +50,12 @@ router.post('/payment/store',async (req, res)=>{
 
 router.get('/download-pdf/:pdfId', async (req, res) => {
     try {
+        console.log(req.params.pdfId);
         const pdf = await generalPdf.findById(req.params.pdfId);
         
         if (!pdf) {
             return res.status(404).send('PDF not found');
         }
-
-
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': `attachment; filename="college-list-${pdf._id}.pdf"`,

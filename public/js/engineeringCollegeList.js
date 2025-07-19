@@ -671,7 +671,7 @@ function displayColleges(colleges, formData) {
     
     resultsContainer.style.display = 'block';
     updateSelectedCount(colleges.length);
-    // saveGeneratePdf();
+    saveGeneratePdf();
     setTimeout(() => {
         resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
