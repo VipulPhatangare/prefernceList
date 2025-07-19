@@ -988,14 +988,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded',async function() {
             const central_object = {};
+            await razorpay();
             async function razorpay() {
                 try {
-                    const response = await fetch('/engineeringCollegeList/razorPay');
+                    const response = await fetch('/genaralCollegeList/razorPay');
                     const data = await response.json();
+                    console.log(data);
                     central_object.razorpayKeyId = data.razorpayKeyId;
-                    // central_object.PaymentPrice = data.amount;
+    
                 } catch (error) {
                     console.log(error);
                 }

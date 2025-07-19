@@ -10,6 +10,13 @@ router.get('/',(req, res)=>{
     res.render('genaralCollegeList');
 });
 
+
+router.get('/razorPay',(req, res)=>{
+    // const amount = req.session.userPaymentInfo.amount;
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
+    res.json({razorpayKeyId});
+});
+
 router.post('/payment/store',async (req, res)=>{
     try {
 
@@ -29,11 +36,11 @@ router.post('/payment/store',async (req, res)=>{
 
         await GeneralCollegeList.save();
         
-        let pdfLink = `http://localhost:3000/download/upload/pdf/${data.pdf_id}`;
-        // let pdfLink = `https://list.campusdekho.ai/download/upload/pdf/${pdfID}`;
+        // let pdfLink = `http://localhost:3000/download/upload/pdf/${data.pdf_id}`;
+        let pdfLink = `https://list.campusdekho.ai/download/upload/pdf/${pdfID}`;
         await sendCollegePreferenceList(data.phone,  data.name, pdfLink);
         
-        res.json({isOk: true,  pdfLink:pdfLink});
+        res.json({isOk: true,  pdfLink: pdfLink});
         
     } catch (error) {
         console.log(error);
