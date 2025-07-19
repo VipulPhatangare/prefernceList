@@ -993,7 +993,7 @@
             await razorpay();
             async function razorpay() {
                 try {
-                    const response = await fetch('/genaralCollegeList/razorPay');
+                    const response = await fetch('/generateReadyList/razorPay');
                     const data = await response.json();
                     // console.log(data);
                     central_object.razorpayKeyId = data.razorpayKeyId;
@@ -1196,7 +1196,7 @@
                 try {
                     
                     let pdf_id = planFinder(); 
-                    console.log(pdf_id);
+                    // console.log(pdf_id);
                     central_object.pdfID = pdf_id;
                     const response = await fetch('/payment/api/generalCollegeList/payment/create-order/');
                     if (!response.ok) throw new Error('Failed to create payment order');
@@ -1226,7 +1226,7 @@
                                     pdf_id : pdf_id
                                 };
                                 
-                                const storeRes = await fetch('/genaralCollegeList/payment/store', {
+                                const storeRes = await fetch('/generateReadyList/payment/store', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(data)
@@ -1235,7 +1235,7 @@
                                 const storeData = await storeRes.json();
                                 if (storeData.isOk) {
                                     // showNotification('Payment processed successfully!', 'success');
-                                    console.log(storeData.pdfLink);
+                                    // console.log(storeData.pdfLink);
                                     resolve(true);
                                     
                                 } else {
@@ -1342,11 +1342,11 @@
             async function downloadPdf() {
                 const pdfId = central_object.pdfID;
 
-                console.log(pdfId);
+                // console.log(pdfId);
                 loadingSpinner.style.display = 'flex';
                 
                 // Fetch the PDF
-                fetch(`/genaralCollegeList/download-pdf/${pdfId}`)
+                fetch(`/generateReadyList/download-pdf/${pdfId}`)
                     .then(response => {
                         if (!response.ok) throw new Error('Failed to download PDF');
                         return response.blob();

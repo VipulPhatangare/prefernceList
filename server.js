@@ -81,7 +81,7 @@ app.get('/download/upload/pdf/:id', async (req, res) => {
 });
 
 const genaralCollegeListRoutes = require('./routes/genaralCollegeListroute'); 
-app.use('/genaralCollegeList', genaralCollegeListRoutes);
+app.use('/generateReadyList', genaralCollegeListRoutes);
 
 const pharmacyCollegeListRoutes = require('./routes/pharmacyCollegeListroute'); 
 app.use('/pharmacyCollegeList', pharmacyCollegeListRoutes);
