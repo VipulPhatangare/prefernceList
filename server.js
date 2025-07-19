@@ -52,8 +52,8 @@ app.post('/upload/pdf', upload.single('pdf'), async (req, res) => {
 
     await newPdf.save();
     const pdfID = newPdf._id.toString();
-    console.log(pdfID);
-    res.json({ success: true });
+    // console.log(pdfID);
+    res.json({ success: true, pdfID: pdfID });
   } catch (err) {
     console.error('Upload error:', err);
     res.status(500).json({ success: false });

@@ -75,9 +75,10 @@
         method: 'POST',
         body: formData
       });
-
+      const data = await res.json();
       if (res.ok) {
-        alert('PDF uploaded successfully!');
+        console.log(data.pdfID);
+        alert('PDF uploaded successfully!', data.pdfID);
         form.reset();
         loadPDFs();
       } else {
