@@ -995,7 +995,7 @@
                 try {
                     const response = await fetch('/genaralCollegeList/razorPay');
                     const data = await response.json();
-                    console.log(data);
+                    // console.log(data);
                     central_object.razorpayKeyId = data.razorpayKeyId;
     
                 } catch (error) {
@@ -1003,7 +1003,7 @@
                 }
             }
 
-            const vipulPdfID = "687b52fe48e8e56cb37ce9ce";
+            // const vipulPdfID = "687b52fe48e8e56cb37ce9ce";
 
             const step1 = document.getElementById('step1');
             const step2 = document.getElementById('step2');
@@ -1111,7 +1111,7 @@
                                 downloadPdfBtn.classList.remove('hidden');
                                 
                             }, 3000);
-                            await downloadPdf(central_object.pdfID);
+                            await downloadPdf();
                         }else{
                             console.log("error")
                         }
@@ -1196,6 +1196,7 @@
                 try {
                     
                     let pdf_id = planFinder(); 
+                    console.log(pdf_id);
                     central_object.pdfID = pdf_id;
                     const response = await fetch('/payment/api/generalCollegeList/payment/create-order/');
                     if (!response.ok) throw new Error('Failed to create payment order');
@@ -1268,7 +1269,7 @@
             }
 
             downloadPdfBtn.addEventListener('click',async function() {
-                await downloadPdf(central_object.pdfID);
+                await downloadPdf();
             });
 
             function showPaymentModal(amount, callback) {
@@ -1338,7 +1339,9 @@
             }
             
             // 
-            async function downloadPdf(pdfId) {
+            async function downloadPdf() {
+                const pdfId = central_object.pdfID;
+
                 console.log(pdfId);
                 loadingSpinner.style.display = 'flex';
                 

@@ -37,7 +37,7 @@ router.post('/payment/store',async (req, res)=>{
         await GeneralCollegeList.save();
         
         // let pdfLink = `http://localhost:3000/download/upload/pdf/${data.pdf_id}`;
-        let pdfLink = `https://list.campusdekho.ai/download/upload/pdf/${pdfID}`;
+        let pdfLink = `https://list.campusdekho.ai/download/upload/pdf/${data.pdfID}`;
         await sendCollegePreferenceList(data.phone,  data.name, pdfLink);
         
         res.json({isOk: true,  pdfLink: pdfLink});
