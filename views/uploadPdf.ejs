@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Upload & Download</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    ul {
+      margin-top: 20px;
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #fff;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Upload PDF</h2>
+  <form id="uploadForm">
+    <input type="text" name="name" placeholder="Enter your name" required>
+    <input type="text" name="userId" placeholder="Enter your ID" required>
+    <input type="file" name="pdf" accept="application/pdf" required>
+    <button type="submit">Upload PDF</button>
+  </form>
+
+  <h2>Uploaded PDFs</h2>
+  <ul id="pdfList"></ul>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const pdfList = document.getElementById('pdfList');
+
+    // Upload handler
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      const res = await fetch('/upload/pdf', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (res.ok) {
+        alert('PDF uploaded successfully!');
+        form.reset();
+        loadPDFs();
+      } else {
+        alert('Upload failed!');
+      }
+    });
+
+    // Load all uploaded PDFs
+    async function loadPDFs() {
+      const res = await fetch('/pdfs');
+      const data = await res.json();
+      pdfList.innerHTML = '';
+      data.forEach(pdf => {
+        const li = document.createElement('li');
+        li.innerHTML = `${pdf.name} (${pdf.userId}) - <a href="/download/${pdf._id}" target="_blank">Download</a>`;
+        pdfList.appendChild(li);
+      });
+    }
+
+    // Load on page load
+    loadPDFs();
+  </script>
+
+</body>
+</html>

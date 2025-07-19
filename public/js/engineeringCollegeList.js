@@ -395,8 +395,9 @@ async function handleFormSubmit(e) {
     }
 
     try {
+        // await generateCollegeList(formData);
         // Show payment confirmation modal
-        // const PaymentPrice = sessionStorage.getItem("PaymentPrice");
+        const PaymentPrice = sessionStorage.getItem("PaymentPrice");
         showPaymentModal(central_object.PaymentPrice, async (confirmed) => {
             if (confirmed) {
                 const paymentSuccess = await processPayment();
@@ -670,7 +671,7 @@ function displayColleges(colleges, formData) {
     
     resultsContainer.style.display = 'block';
     updateSelectedCount(colleges.length);
-    saveGeneratePdf();
+    // saveGeneratePdf();
     setTimeout(() => {
         resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
@@ -1165,6 +1166,131 @@ async function generatePdf() {
         alert('An error occurred while generating the PDF');
     }
 }
+
+
+// async function generatePdf() {
+//     try {
+//         if (!central_object?.final_college_list || central_object.final_college_list.length === 0) {
+//             alert('Please generate a college list first');
+//             return;
+//         }
+
+//         const { jsPDF } = window.jspdf;
+//         const doc = new jsPDF({
+//             orientation: 'landscape',
+//             unit: 'mm',
+//             format: 'a4'
+//         });
+
+//         // Add title
+//         doc.setFontSize(30);
+//         doc.text('CampusDekho.ai', 14, 20);
+//         doc.setFontSize(12);
+        
+//         // Student information
+//         doc.text(`PercentileRange: 01-40`, 14, 30);
+//         doc.text(`Gender: ${central_object.formData?.gender || 'Not specified'}`, 14, 36);
+//         doc.text(`Caste: ${central_object.formData?.caste || 'Not specified'}`, 14, 42);
+
+//         // Prepare table data
+//         let headData = ['No.', 'Choice Code', 'College Name', 'Branch', 'GOPEN'];
+
+//         if(central_object.formData?.caste === 'EWS'){
+//             headData.push('EWS');
+//         }
+
+//         if(central_object.formData?.caste && central_object.formData.caste !== 'OPEN' && 
+//            central_object.formData.caste !== 'EWS' && central_object.formData.gender === 'Male'){
+//             headData.push(`G${central_object.formData.caste}`);
+//         }
+
+//         if(central_object.formData?.gender === 'Female'){
+//             headData.push('LOPEN');
+
+//             if(central_object.formData.caste && central_object.formData.caste !== 'OPEN' && 
+//                central_object.formData.caste !== 'EWS'){
+//                 headData.push(`L${central_object.formData.caste}`);
+//             }
+//         }
+        
+//         let count = 1;
+//         const tableData = [];
+        
+//         central_object.final_college_list.forEach(college => {
+//             // Regular seat
+//             let row = [
+//                 count++,
+//                 college.choice_code || '',
+//                 college.college_name || '',
+//                 college.branch_name || '',
+//                 college.gopen || ''
+//             ];
+            
+//             if(central_object.formData?.caste === 'EWS'){
+//                 row.push(college.ews || '');
+//             }
+            
+//             if(central_object.formData?.caste && central_object.formData.caste !== 'OPEN' && 
+//                central_object.formData.caste !== 'EWS' && central_object.formData.gender === 'Male'){
+//                 let c = `G${central_object.formData.caste}`.toLowerCase();
+//                 row.push(college[c] || '');
+//             }
+
+//             if(central_object.formData?.gender === 'Female'){
+//                 row.push(college.lopen || '');
+//                 if(central_object.formData.caste && central_object.formData.caste !== 'EWS' && 
+//                    central_object.formData.caste !== 'OPEN'){
+//                     let c = `L${central_object.formData.caste}`.toLowerCase();
+//                     row.push(college[c] || '');
+//                 }
+//             }
+          
+//             tableData.push(row);
+//         });
+
+//         // Add table
+//         doc.autoTable({
+//             head: [headData],
+//             body: tableData,
+//             startY: 48, // Fixed startY position instead of undefined currentY
+//             theme: 'grid',
+//             headStyles: {
+//                 fillColor: [26, 58, 143],
+//                 textColor: 255,
+//                 fontSize: 8
+//             },
+//             bodyStyles: {
+//                 fontSize: 7
+//             },
+//             alternateRowStyles: {
+//                 fillColor: [240, 240, 240]
+//             },
+//             margin: { left: 14 },
+//             didDrawPage: function (data) {
+//                 // Disclaimer text
+//                 const pageHeight = doc.internal.pageSize.height;
+//                 doc.setFontSize(8);
+//                 doc.setTextColor(100);
+//                 const disclaimerText = [
+//                     'Disclaimer: The information, predictions, and content provided by CampusDekho.ai , including college predictor and branch-wise prediction tools, are intended solely for reference purposes. While we strive to ensure',
+//                     'the accuracy and reliability of the data presented, we do not guarantee or assure that the results and outcomes shown are 100% accurate or conclusive. Candidates are strongly advised to independently verify and',
+//                     'validate all information before making any decisions based on the provided.'
+//                 ];
+                
+//                 disclaimerText.forEach((line, index) => {
+//                     doc.text(line, 14, pageHeight - 11 + (index * 4));
+//                 });
+//             }
+//         });
+
+//         doc.save('generalList.pdf');
+        
+//     } catch (error) {
+//         console.error('Error generating PDF:', error);
+//         alert('An error occurred while generating the PDF');
+//     }
+// }
+
 document.getElementById('backToHome').addEventListener('click', () => {
     window.location.replace('https://campusdekho.ai');
 });

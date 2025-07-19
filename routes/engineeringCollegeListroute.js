@@ -1202,11 +1202,6 @@ router.post('/College_list', async (req, res) => {
         formData.generalRank = await getRankFromPercentile(formData.generalRank);
         // console.log(formData);
 
-        if(central_object.percentile < 80 && formData.branchCategories[0] != 'All'){
-            formData.branchCategories.push('COMP');
-            formData.branchCategories.push('COMPAI');
-        }
-
         new_data_of_student.selected_branches_code = await getSelectedBranchCode(formData.selected_branches);
         // calculateRankRange(formData, amount);
 
@@ -1262,6 +1257,12 @@ router.post('/College_list', async (req, res) => {
 
         
         let colleges = [...colleges_1, ...colleges_2];
+
+        // new_data_of_student.minRank = 135762;
+        // new_data_of_student.maxRank = 178200; 
+
+        // let colleges = await getColleges(formData);
+        // colleges.sort((a, b) => a.choice_points - b.choice_points);
         colleges.sort((a, b) => b.choice_points - a.choice_points);
         // console.log(colleges);
         res.json(colleges);

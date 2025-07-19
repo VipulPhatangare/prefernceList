@@ -13,9 +13,25 @@ const razorpay = new Razorpay({
 
 router.get("/api/payment/create-order", async (req, res) => {
     
-    console.log(req.session.userPaymentInfo);
+    // console.log(req.session.userPaymentInfo);
     const amount = req.session.userPaymentInfo.amount;
     const finalAmount = amount;
+    const options = {
+        amount: finalAmount * 100, // amount in paise
+        currency: "INR",
+        receipt: "order_rcptid_" + Math.random().toString(36).substring(2, 15),
+    };
+    try {
+        const order = await razorpay.orders.create(options);
+        res.json(order);
+    } catch (err) {
+        res.status(500).send("Error creating order");
+    }
+});
+
+router.get("/api/generalCollegeList/payment/create-order/", async (req, res) => {
+    
+    const finalAmount = 499;
     const options = {
         amount: finalAmount * 100, // amount in paise
         currency: "INR",

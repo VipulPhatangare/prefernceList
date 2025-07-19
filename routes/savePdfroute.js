@@ -66,7 +66,6 @@ async function sendCollegePreferenceList(mobileNumber, name, listLink) {
     }
 }
 
-
 router.post('/savePdf', upload.single('pdf'), async (req, res) => {
     try {
         console.log('savePdf API called');

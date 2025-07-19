@@ -4,10 +4,12 @@ require('dotenv').config();
 const path = require("path");
 
 const ExcelJS = require('exceljs');
-
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const {connectDB, supabase} = require('./database/db');
-const {Pdf, Payment} = require('./database/schema');
+const {Pdf, Payment, generalPdf} = require('./database/schema');
 
 connectDB();
 
@@ -33,11 +35,59 @@ app.get("/", (req, res) => {
   res.render("payementPage");
 });
 
+app.get("/uploadPdf", (req, res) => {
+  res.render("uploadPdf");
+});
+
+app.post('/upload/pdf', upload.single('pdf'), async (req, res) => {
+  try {
+    const { name, userId } = req.body;
+    const pdfBuffer = req.file.buffer;
+
+    const newPdf = new generalPdf({
+      name,
+      userId: userId,
+      pdf: pdfBuffer
+    });
+
+    await newPdf.save();
+    const pdfID = newPdf._id.toString();
+    console.log(pdfID);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ success: false });
+  }
+});
+
+app.get('/download/upload/pdf/:id', async (req, res) => {
+  try {
+    const pdfDoc = await generalPdf.findById(req.params.id);
+
+    if (!pdfDoc || !pdfDoc.pdf) {
+      return res.status(404).send('PDF not found');
+    }
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${pdfDoc.name || 'download'}.pdf"`
+    });
+
+    res.send(pdfDoc.pdf);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+const genaralCollegeListRoutes = require('./routes/genaralCollegeListroute'); 
+app.use('/genaralCollegeList', genaralCollegeListRoutes);
+
 const pharmacyCollegeListRoutes = require('./routes/pharmacyCollegeListroute'); 
 app.use('/pharmacyCollegeList', pharmacyCollegeListRoutes);
 
-// const dseCollegeListRoutes = require('./routes/dseCollegeListroute'); 
-// app.use('/dseCollegeList',dseCollegeListRoutes);
+const dseCollegeListRoutes = require('./routes/dseCollegeListroute'); 
+app.use('/dseCollegeList',dseCollegeListRoutes);
 
 const engineeringCollegeListRoutes = require('./routes/engineeringCollegeListroute'); 
 app.use('/engineeringCollegeList',engineeringCollegeListRoutes);

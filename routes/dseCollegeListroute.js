@@ -28,7 +28,7 @@ router.get('/takePaymentInfo',(req, res)=>{
 router.get('/fetchBranches', async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from('branch_new')
+            .from('dse_branch_info')
             .select('*');
         
         if (error) throw error;
@@ -43,7 +43,7 @@ router.get('/fetchBranches', async (req, res) => {
 router.get('/fetchcity', async (req, res) => {
     try {
         const { data, error } = await supabase
-            .from('college_info')
+            .from('dse_college_info')
             .select('city')
             .not('city', 'is', null)
             .order('city', { ascending: true });
@@ -61,8 +61,9 @@ router.get('/fetchcity', async (req, res) => {
 
 router.get('/fetchUniversity', async (req, res) => {
     try {
+        console.log("dse fetch university trigger")
         const { data, error } = await supabase
-            .from('college_info')
+            .from('dse_college_info')
             .select('university')
             .not('university', 'is', null)
             .order('university', { ascending: true });

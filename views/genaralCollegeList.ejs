@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6ZYMV0HMQZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-6ZYMV0HMQZ');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusDekho - Preference List Generator</title>
+    <link rel="icon" href="/asset/cd.png" type="image/png">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0054A6;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7ff;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 70px;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 85%;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 2rem;
+        }
+
+        header p {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        form {
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 107, 255, 0.2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            accent-color: var(--primary-color);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            accent-color: var(--primary-color);
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        .submit-btn {
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #3a5bef;
+        }
+
+        .results-container {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 1rem;
+        }
+
+        .note-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0 2rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            font-size: 0.9rem;
+            color: #5d4037;
+            box-shadow: var(--box-shadow);
+        }
+
+        .note-box strong {
+            color: #e65100;
+        }
+
+        .download-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: #3a5bef;
+        }
+
+        .download-pdf-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-pdf-btn:hover {
+            background-color: #218838;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding: 0 1.5rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            color: #666;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            z-index: 2;
+        }
+
+        .step.active .step-number {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .step.active .step-title {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .step.completed .step-title {
+            color: var(--success-color);
+        }
+
+        .step-connector {
+            position: absolute;
+            top: 20px;
+            left: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: #ddd;
+            z-index: 1;
+        }
+
+        .step.completed .step-connector {
+            background-color: var(--success-color);
+        }
+
+        .step:first-child .step-connector {
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Error message style */
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .has-error input {
+            border-color: var(--danger-color);
+        }
+
+        /* Payment Modal Styles */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .payment-modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .payment-modal-content h3 {
+            color: #0067A5;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .payment-modal-content p {
+            margin-bottom: 1.5rem;
+            color: #333;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .payment-breakdown {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .payment-breakdown table {
+            border-collapse: collapse;
+        }
+
+        .payment-breakdown tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        .payment-breakdown tr:last-child {
+            border-bottom: none;
+        }
+
+        .payment-breakdown td {
+            padding: 0.5rem 0;
+        }
+
+        .total-row {
+            font-weight: bold;
+            border-top: 2px solid #ddd;
+        }
+
+        .gst-row {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .payment-modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .payment-confirm-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .payment-confirm-btn:hover {
+            background-color: #00508c;
+        }
+
+        .payment-cancel-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .payment-cancel-btn:hover {
+            background-color: #5a6268;
+        }
+
+        /* Loading spinner */
+        .loading-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        .loading-text {
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 1.2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 0;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #adb5bd;
+        }
+
+        .footer-social li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-social img {
+            width: 20px;
+            margin-right: 8px;
+        }
+
+        /* Button container styles */
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* User info summary styles */
+        .user-info-summary {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .user-info-summary h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .user-info-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-info-item {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-info-item strong {
+            display: block;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .user-info-item span {
+            color: var(--dark-color);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        @media (max-width: 1300px) {
+            .form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .form-group {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                max-width: 95%;
+                padding: 1rem;
+            }
+            
+            .main-container {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .user-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-info-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+            
+            .navbar-brand img {
+                height: 35px;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0.5rem;
+            }
+            
+            .main-container {
+                padding: 1rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .form-group {
+                min-width: 100%;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .step {
+                padding: 0 1rem;
+            }
+
+            .step-title {
+                font-size: 0.8rem;
+            }
+            
+            .footer {
+                padding: 2rem 0;
+            }
+
+            .button-container {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+
+            .button-container button {
+                width: 100%;
+            }
+
+            .payment-modal-buttons {
+                flex-direction: column;
+            }
+
+            .payment-modal-buttons button {
+                width: 100%;
+            }
+        }
+
+        /* Payment Complete Modal */
+.payment-complete-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.payment-complete-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.payment-complete-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.payment-complete-content h3 {
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+.payment-complete-content .icon {
+    font-size: 3rem;
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+.payment-complete-content p {
+    margin-bottom: 1.5rem;
+    color: #333;
+    line-height: 1.5;
+}
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="https://campusdekho.ai">
+                <img src="https://campusdekho.ai/public/user/assets/img/logo/logo_light.png" alt="CampusDekho Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://campusdekho.ai">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="topCollegesDropdown" role="button" data-bs-toggle="dropdown">
+                            Top Colleges
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="https://campusdekho.ai/collage_list/engineering">Engineering</a></li>
+                            <li><a class="dropdown-item" href="https://campusdekho.ai">Management</a></li>
+                            <li><a class="dropdown-item" href="https://campusdekho.ai/collage_list/pharmacy">Pharmacy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://campusdekho.ai/webinar/index">Webinar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://campusdekho.ai/events">Events & Workshops</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://campusdekho.ai/counselling/page">Counselling</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown">
+                            More
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="https://campusdekho.ai/about_us">About Us</a></li>
+                            <li><a class="dropdown-item" href="https://campusdekho.ai/contact_us">Contact Us</a></li>
+                            <li><a class="dropdown-item" href="https://campusdekho.ai/blog/2">Blog</a></li>
+                            <li><a class="dropdown-item" href="https://chat.whatsapp.com/BNF9lDKxMIoGSdxXL5XIfj">Join <img src="https://campusdekho.ai/public/user/assets//img/images/blue-whatsapp.svg" class="ms-1" style="width: 21px;"></a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="https://campusdekho.ai/student/logout" class="btn btn-outline-primary">
+                        Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container" style="margin-top: 20px;">
+        <div class="main-container" style="margin-top: 30px;">
+            <header >
+                <h1 style="color: #333;">Get Your Ready-Made</h1>
+                <h1 style="color: #333;" > <span style="color: #0054A6;">MHT CET</span> College Preference List</h1>
+                <p>Enter your details and select your category and percentile to instantly get a college list tailored for you</p>
+            </header>
+
+            <div class="step-indicator">
+                <div class="step active" id="step1-indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Basic Details</div>
+                    <div class="step-connector"></div>
+                </div>
+                <div class="step" id="step2-indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Summary</div>
+                    <div class="step-connector"></div>
+                </div>
+            </div>
+
+            <form id="userInfoForm">
+                <div id="step1">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="Enter Full Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactNumber">Contact Number (WhatsApp Number)</label>
+                            <input type="tel" id="contactNumber" name="contactNumber" 
+                                   placeholder="Enter 10-digit Contact Number" 
+                                   pattern="[0-9]{10}" 
+                                   title="Please enter exactly 10 digits"
+                                   required>
+                            <div class="error-message" id="phoneError">Please enter exactly 10 digits</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter Email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category" name="category" required>
+                                <option value="" disabled selected>Select Category</option>
+                                <option value="OPEN">OPEN</option>
+                                <option value="OBC">OBC</option>
+                                <option value="SEBC">SEBC</option>
+                                <option value="SC">SC</option>
+                                <option value="ST">ST</option>
+                                <option value="EWS">EWS</option>
+                                <option value="NT1">NT1</option>
+                                <option value="NT2">NT2</option>
+                                <option value="NT3">NT3</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="percentileRange">Percentile Range</label>
+                            <select id="percentileRange" name="percentileRange" required>
+                                <option value="" disabled selected>Select Percentile Range</option>
+                                <option value="90-100">90-100</option>
+                                <option value="80-90">80-90</option>
+                                <option value="65-80">65-80</option>
+                                <option value="40-65">40-65</option>
+                                <option value="01-40">01-40</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" id="nextBtn" class="submit-btn" style="width: 100px;">Next</button>
+                    </div>
+                </div>
+
+                <div id="step2" class="hidden">
+                    <h2>Summary</h2>
+                    
+                    <div class="user-info-summary">
+                        <h3>Your Information</h3>
+                        <div class="user-info-row">
+                            <div class="user-info-item">
+                                <strong>Full Name</strong>
+                                <span id="summaryName"></span>
+                            </div>
+                            <div class="user-info-item">
+                                <strong>Contact Number</strong>
+                                <span id="summaryContact"></span>
+                            </div>
+                            <div class="user-info-item">
+                                <strong>Email</strong>
+                                <span id="summaryEmail"></span>
+                            </div>
+                        </div>
+                        <div class="user-info-row">
+                            <div class="user-info-item">
+                                <strong>Category</strong>
+                                <span id="summaryCategoryFull"></span>
+                            </div>
+                            <div class="user-info-item">
+                                <strong>Gender</strong>
+                                <span id="summaryGender"></span>
+                            </div>
+                            <div class="user-info-item">
+                                <strong>Percentile Range</strong>
+                                <span id="summaryPercentileFull"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="note-box">
+                        <strong>Note:</strong>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+                            <li>After successful payment, your PDF will automatically start downloading on your screen.</li>
+                            <li>Additionally, the list will also be sent to your WhatsApp number (as provided during registration).</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button type="button" id="backBtn" class="submit-btn" style="background-color: var(--secondary-color); width: 100px;">Back</button>
+                        <button type="button" id="downloadBtn" class="download-btn" style="width: 250px;">Download Now - ₹499</button>
+                        <button type="button" id="downloadPdfBtn" class="download-pdf-btn hidden" style="width: 250px;">Download PDF</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <img src="https://campusdekho.ai/public/user/assets/img/logo/logo_light.png" class="w-50 bg-white p-2 mb-3">
+                    <p>Campus Dekho. Ai empowers students with expert guidance and resources for CET, JEE,
+                        and college admissions, supporting informed higher education decisions.
+                    </p>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="https://campusdekho.ai">Home</a></li>
+                        <li class="mb-2"><a href="https://campusdekho.ai/about_us">About Us</a></li>
+                        <li class="mb-2"><a href="https://campusdekho.ai/user_search_colleges">Search Colleges</a></li>
+                        <li class="mb-2"><a href="https://campusdekho.ai/blog/2">Blog</a></li>
+                        <li class="mb-2"><a href="https://campusdekho.ai/contact_us">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h5>Our Features</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">Preference List Generator</li>
+                        <li class="mb-2">College Cut-Off List</li>
+                        <li class="mb-2">Top College List</li>
+                        <li class="mb-2">College Predictor</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h5>Community</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#">Broadcast</a></li>
+                        <li class="mb-2"><a href="https://campusdekho.ai/blog2">Blog</a></li>
+                        <li class="mb-2"><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h5>Social Links</h5>
+                    <ul class="list-unstyled footer-social">
+                        <li class="mb-2"><a href="https://www.instagram.com/campusdekho.ai"><img src="https://campusdekho.ai/public/user/assets/img/images/insta.svg" class="me-2">Instagram</a></li>
+                        <li class="mb-2"><a href="https://www.facebook.com/campusdekhoo"><img src="https://campusdekho.ai/public/user/assets/img/images/fb.svg" class="me-2">Facebook</a></li>
+                        <li class="mb-2"><a href="https://twitter.com/campusdekhoai"><img src="https://campusdekho.ai/public/user/assets/img/images/x.png" class="rounded-circle me-2">Twitter</a></li>
+                        <li class="mb-2"><a href="https://www.youtube.com/@campusdekhoai"><img src="https://campusdekho.ai/public/user/assets/img/images/you.svg" class="me-2">YouTube</a></li>
+                        <li class="mb-2"><a href="https://www.linkedin.com/company/campusdekhoai/"><img src="https://campusdekho.ai/public/user/assets/img/images/link.svg" class="me-2">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="text-center py-3">
+                <p class="mb-0">Copyright © 2025 CampusDekho. All Rights Reserved.</p>
+                <p class="mb-0">
+                    <a href="https://campusdekho.ai/privacy_policy">Terms of Use</a> | 
+                    <a href="https://campusdekho.ai/privacy_policy">Privacy Policy</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Payment Complete Modal -->
+    <div class="payment-complete-modal" id="paymentCompleteModal">
+        <div class="payment-complete-content">
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Payment Successful!</h3>
+            <p>Your payment has been processed successfully. Your PDF is being generated.</p>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-container" id="loadingSpinner">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Generating PDF...</div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const nextBtn = document.getElementById('nextBtn');
+            const backBtn = document.getElementById('backBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+            const step1Indicator = document.getElementById('step1-indicator');
+            const step2Indicator = document.getElementById('step2-indicator');
+            const paymentCompleteModal = document.getElementById('paymentCompleteModal');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const phoneError = document.getElementById('phoneError');
+            
+            // Form fields
+            const fullName = document.getElementById('fullName');
+            const category = document.getElementById('category');
+            const gender = document.getElementById('gender');
+            const contactNumber = document.getElementById('contactNumber');
+            const percentileRange = document.getElementById('percentileRange');
+            const email = document.getElementById('email');
+            
+            // Summary fields
+            const summaryName = document.getElementById('summaryName');
+            const summaryContact = document.getElementById('summaryContact');
+            const summaryEmail = document.getElementById('summaryEmail');
+            const summaryCategoryFull = document.getElementById('summaryCategoryFull');
+            const summaryGender = document.getElementById('summaryGender');
+            const summaryPercentileFull = document.getElementById('summaryPercentileFull');
+
+            // Phone number validation - only allow numbers
+            contactNumber.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, ''); // Remove non-digit characters
+                
+                // Limit to 10 digits
+                if (this.value.length > 10) {
+                    this.value = this.value.slice(0, 10);
+                }
+                
+                // Hide error if valid
+                if (this.value.length === 10) {
+                    this.classList.remove('has-error');
+                    phoneError.style.display = 'none';
+                }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                // Validate phone number
+                const phoneNumber = contactNumber.value;
+                if (!/^\d{10}$/.test(phoneNumber)) {
+                    contactNumber.classList.add('has-error');
+                    phoneError.style.display = 'block';
+                    contactNumber.focus();
+                    return;
+                }
+
+                // Validate other form fields
+                if (!fullName.value || !category.value || !gender.value || !percentileRange.value || !email.value) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+
+                // Update summary
+                summaryName.textContent = fullName.value;
+                summaryContact.textContent = contactNumber.value;
+                summaryEmail.textContent = email.value;
+                summaryCategoryFull.textContent = category.value;
+                summaryGender.textContent = gender.value;
+                summaryPercentileFull.textContent = percentileRange.value;
+
+                // Switch to step 2
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+                
+                // Update step indicator
+                step1Indicator.classList.remove('active');
+                step1Indicator.classList.add('completed');
+                step2Indicator.classList.add('active');
+            });
+
+            backBtn.addEventListener('click', function() {
+                // Switch back to step 1
+                step2.classList.add('hidden');
+                step1.classList.remove('hidden');
+                
+                // Update step indicator
+                step2Indicator.classList.remove('active');
+                step1Indicator.classList.add('active');
+                step1Indicator.classList.remove('completed');
+            });
+
+            downloadBtn.addEventListener('click',async function() {
+                // Show payment modal with amount 499
+                showPaymentModal(499,async function(confirmed) {
+                    if (confirmed) {
+                        // Show loading spinner
+                        const paymentSuccess = await processPayment();
+                        
+                        if(paymentSuccess){
+                            paymentCompleteModal.classList.add('active');
+                            setTimeout(function() {
+                                paymentCompleteModal.classList.remove('active');
+                                
+                                // Hide the payment button and show the download button
+                                downloadBtn.classList.add('hidden');
+                                downloadPdfBtn.classList.remove('hidden');
+                                
+                            }, 3000);
+                        }else{
+                            console.log("error")
+                        }
+                    }
+
+                });
+            });
+
+            async function processPayment() {
+                try {
+                    
+                    const response = await fetch('/payment/api/generalCollegeList/payment/create-order/');
+                    if (!response.ok) throw new Error('Failed to create payment order');
+                    
+                    const order = await response.json();
+                    // const razorpayKeyId = sessionStorage.getItem("razorpayKeyId ");
+
+                    return new Promise((resolve) => {
+                        const options = {
+                            key: "rzp_test_skrfIDWTsr5fbo",
+                            amount: order.amount,
+                            currency: order.currency,
+                            name: "CampusDekho",
+                            description: "general pdf Plan",
+                            order_id: order.id,
+                            handler: async function(response) {
+                                const data = {
+                                    name: fullName.value,
+                                    email: email.value,
+                                    phone: contactNumber.value,
+                                    plan: "general 499",
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    caste: category.value,
+                                    gender: gender.value,
+                                    percentileRange: percentileRange.value
+                                };
+                                
+                                const storeRes = await fetch('/genaralCollegeList/payment/store', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(data)
+                                });
+                                
+                                const storeData = await storeRes.json();
+                                if (storeData.isOk) {
+                                    // showNotification('Payment processed successfully!', 'success');
+                                    console.log(storeData.pdfLink);
+                                    resolve(true);
+                                    
+                                } else {
+                                    // showNotification('Payment processing failed', 'error');
+                                    resolve(false);
+                                }
+                            },
+                            prefill: {
+                                name: fullName.value,
+                                email: email.value,
+                                contact: contactNumber.value
+                            },
+                            theme: {
+                                color: "#0054A6"
+                            }
+                        };
+                        
+                        const rzp = new Razorpay(options);
+                        rzp.on('payment.failed', function(response) {
+                            console.error('Payment failed:', response);
+                            showNotification('Payment failed: ' + response.error.description, 'error');
+                            resolve(false);
+                        });
+                        rzp.open();
+                    });
+                } catch (error) {
+                    console.error('Payment error:', error);
+                    showNotification('Payment error: ' + error.message, 'error');
+                    return false;
+                }
+            }
+
+            downloadPdfBtn.addEventListener('click', function() {
+                // In a real implementation, this would trigger the PDF download
+                alert('Your PDF is now downloading!');
+                
+                // Here you would typically:
+                // 1. Generate the PDF
+                // 2. Trigger the download
+                // 3. Send to WhatsApp
+            });
+
+            function showPaymentModal(amount, callback) {
+                const modal = document.createElement('div');
+                modal.className = 'payment-modal';
+
+                // Calculate payment breakdown
+                const basePrice = (amount / 1.21).toFixed(2); // ≈ 412.40
+                const cgst = (basePrice * 0.09).toFixed(2);
+                const sgst = (basePrice * 0.09).toFixed(2);
+                const convenienceFee = (basePrice * 0.03).toFixed(2);
+                const finalAmount = (basePrice * 1.21).toFixed(2); // Should be 499
+
+                modal.innerHTML = `
+                    <div class="payment-modal-content">
+                        <h3>Confirm Payment</h3>
+                        <p>To proceed with generating your personalized college list, please complete the payment of ₹${finalAmount}. A detailed cost breakdown is provided below.</p>
+                        
+                        <div class="payment-breakdown">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">Base Price</td>
+                                    <td style="text-align: right;">₹${basePrice}</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;">CGST (9%)</td>
+                                    <td style="text-align: right;">₹${cgst}</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;">SGST (9%)</td>
+                                    <td style="text-align: right;">₹${sgst}</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;">Convenience Fee (3%)</td>
+                                    <td style="text-align: right;">₹${convenienceFee}</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td style="text-align: left;"><strong>Total Payable</strong></td>
+                                    <td style="text-align: right;"><strong>₹${finalAmount}</strong></td>
+                                </tr>
+                                <tr class="gst-row">
+                                    <td colspan="2" style="text-align: center; font-size: 1.1em; padding-top: 1em;">
+                                        GSTIN: 27OJKPS9666F1Z2
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="payment-modal-buttons">
+                            <button id="confirmPaymentBtn" class="payment-confirm-btn">Pay Now</button>
+                            <button id="cancelPaymentBtn" class="payment-cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                document.getElementById('confirmPaymentBtn').addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                    callback(true);
+                });
+
+                document.getElementById('cancelPaymentBtn').addEventListener('click', () => {
+                    document.body.removeChild(modal);
+                    callback(false);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
